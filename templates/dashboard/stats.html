@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Your Stats {{ year }} - Music Wrapped{% endblock %}
+
+{% block content %}
+<div class="dashboard-container stats-page">
+    <div class="page-header">
+        <h1><i class="fas fa-chart-line"></i> Your {{ year }} Statistics</h1>
+        <p>Deep dive into your listening patterns</p>
+    </div>
+
+    <!-- Monthly Listening Trends -->
+    <div class="stats-section">
+        <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Monthly Listening Activity</h2>
+        <div class="monthly-chart">
+            {% set month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] %}
+            {% set monthly_dict = {} %}
+            {% for month, count in monthly_stats %}
+                {% set _ = monthly_dict.update({month: count}) %}
+            {% endfor %}
+            
+            {% set max_count = monthly_stats|map(attribute=1)|max if monthly_stats else 1 %}
+            
+            <div class="chart-bars">
+                {% for month_num in range(1, 13) %}
+                <div class="chart-bar-container">
+                    <div class="chart-bar" 
+                         style="height: {{ (monthly_dict.get(month_num, 0) / max_count * 100) if max_count > 0 else 0 }}%"
+                         data-count="{{ monthly_dict.get(month_num, 0) }}">
+                        <span class="bar-value">{{ monthly_dict.get(month_num, 0) }}</span>
+                    </div>
+                    <span class="bar-label">{{ month_names[month_num - 1] }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Insights -->
+    <div class="stats-section">
+        <h2 class="section-title"><i class="fas fa-lightbulb"></i> Quick Insights</h2>
+        <div class="insights-grid">
+            {% if monthly_stats %}
+            <div class="insight-card">
+                <i class="fas fa-fire"></i>
+                <h3>Most Active Month</h3>
+                {% set busiest = monthly_stats|sort(attribute=1, reverse=true)|first %}
+                <p>{{ month_names[busiest[0] - 1] }} with {{ busiest[1] }} plays</p>
+            </div>
+            {% endif %}
+            
+            <div class="insight-card">
+                <i class="fas fa-users"></i>
+                <h3>Jam Sessions</h3>
+                <p>{{ jam_count }} sessions with {{ jam_partners }} friends</p>
+            </div>
+            
+            {% if total_jam_time > 0 %}
+            <div class="insight-card">
+                <i class="fas fa-clock"></i>
+                <h3>Total Jam Time</h3>
+                <p>{{ total_jam_time }} minutes</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

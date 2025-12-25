@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Your Wrapped {{ year }} - Music Wrapped{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+        <!-- Hero Section with Animation -->
+        <div class="wrapped-hero animate-in">
+            <h1 class="hero-title">This is what your sound looked like in {{ year }}</h1>
+            <div class="hero-stat pulse">
+                <span class="hero-number">{{ total_time }}</span>
+                <span class="hero-label">minutes of pure music</span>
+            </div>
+            <div class="scroll-indicator">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+
+        <!-- Quick Stats with Stagger Animation -->
+        <div class="quick-stats">
+            <div class="quick-stat animate-stat" style="--delay: 0.1s">
+                <div class="stat-circle">
+                    <span class="quick-number">{{ unique_songs }}</span>
+                </div>
+                <span class="quick-label">unique songs</span>
+            </div>
+            <div class="quick-stat animate-stat" style="--delay: 0.2s">
+                <div class="stat-circle">
+                    <span class="quick-number">{{ top_artists|length }}</span>
+                </div>
+                <span class="quick-label">different artists</span>
+            </div>
+            <div class="quick-stat animate-stat" style="--delay: 0.3s">
+                <div class="stat-circle">
+                    <span class="quick-number">{{ favorite_genre }}</span>
+                </div>
+                <span class="quick-label">top genre</span>
+            </div>
+        </div>
+
+        <!-- Top Song Highlight with Gradient -->
+        <div class="hero-card slide-up">
+            <div class="card-glow"></div>
+            <div class="hero-card-content">
+                <div class="hero-card-header">
+                    <i class="fas fa-crown crown-icon"></i>
+                    <h2>Your Most Played</h2>
+                </div>
+                {% if top_songs %}
+                <div class="hero-song">
+                    <div class="hero-song-info">
+                        <h3 class="song-title">{{ top_songs[0][0].title }}</h3>
+                        <p class="artist-name">{{ top_songs[0][1].name }}</p>
+                    </div>
+                    <div class="hero-song-plays">
+                        <span class="play-count">{{ top_songs[0][2] }}</span>
+                        <span class="play-label">plays</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- More Top Tracks -->
+        <div class="wrapped-section">
+            <h2 class="section-title fade-in">More Top Tracks</h2>
+            <div class="podium-list">
+                {% for song, artist, count in top_songs[1:4] %}
+                <div class="podium-item rank-{{ loop.index + 1 }}" style="--item-delay: {{ loop.index * 0.1 }}s">
+                    <div class="rank-badge">#{{ loop.index + 1 }}</div>
+                    <div class="podium-content">
+                        <strong class="track-title">{{ song.title }}</strong>
+                        <span class="track-artist">{{ artist.name }}</span>
+                        <div class="play-bar">
+                            <div class="play-bar-fill" style="width: {{ 100 - (loop.index - 1) * 20 }}%"></div>
+                        </div>
+                    </div>
+                    <div class="play-count-badge">{{ count }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+</div>
+{% endblock %}
