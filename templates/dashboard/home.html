@@ -3,82 +3,93 @@
 {% block title %}Your Wrapped {{ year }} - Music Wrapped{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
+<div class="dashboard-container terminal-dashboard">
         <!-- Hero Section with Animation -->
         <div class="wrapped-hero animate-in">
-            <h1 class="hero-title">This is what your sound looked like in {{ year }}</h1>
-            <div class="hero-stat pulse">
+            <div class="terminal-prompt">&gt; LOADING_USER_DATA.exe</div>
+            <h1 class="hero-title">THIS IS WHAT YOUR SOUND LOOKED LIKE IN {{ year }}</h1>
+            <div class="hero-stat">
                 <span class="hero-number">{{ total_time }}</span>
-                <span class="hero-label">minutes of pure music</span>
+                <span class="hero-label">MINUTES OF PURE MUSIC</span>
             </div>
-            <div class="scroll-indicator">
-                <i class="fas fa-chevron-down"></i>
+            <div class="terminal-cursor-line">_</div>
+        </div>
+
+        <!-- DOS-Style Stats Grid -->
+        <div class="dos-stats-grid">
+            <div class="dos-box" style="--delay: 0.1s">
+                <div class="dos-box-header">
+                    <span>┌─ TOTAL PLAYS ─┐</span>
+                </div>
+                <div class="dos-box-content">
+                    <div class="ascii-number">{{ total_plays }}</div>
+                    <div class="dos-label">LISTENING SESSIONS</div>
+                </div>
+                <div class="dos-box-footer">└────────────────┘</div>
+            </div>
+
+            <div class="dos-box" style="--delay: 0.2s">
+                <div class="dos-box-header">
+                    <span>┌─ TOP ARTIST ─┐</span>
+                </div>
+                <div class="dos-box-content">
+                    {% if top_artists %}
+                    <div class="ascii-genre">{{ top_artists[0][0].name[:20] }}</div>
+                    <div class="dos-label">FAVORITE ARTIST</div>
+                    {% endif %}
+                </div>
+                <div class="dos-box-footer">└───────────────┘</div>
+            </div>
+
+            <div class="dos-box" style="--delay: 0.3s">
+                <div class="dos-box-header">
+                    <span>┌─ TOP GENRE ─┐</span>
+                </div>
+                <div class="dos-box-content">
+                    <div class="ascii-genre">{{ favorite_genre }}</div>
+                    <div class="dos-label">FAVORITE GENRE</div>
+                </div>
+                <div class="dos-box-footer">└──────────────┘</div>
             </div>
         </div>
 
-        <!-- Quick Stats with Stagger Animation -->
-        <div class="quick-stats">
-            <div class="quick-stat animate-stat" style="--delay: 0.1s">
-                <div class="stat-circle">
-                    <span class="quick-number">{{ unique_songs }}</span>
-                </div>
-                <span class="quick-label">unique songs</span>
+        <!-- DOS Command Line Style Top Track -->
+        <div class="terminal-section">
+            <div class="terminal-header">
+                <span>═══════════════════════════════════════════════════════</span>
             </div>
-            <div class="quick-stat animate-stat" style="--delay: 0.2s">
-                <div class="stat-circle">
-                    <span class="quick-number">{{ top_artists|length }}</span>
-                </div>
-                <span class="quick-label">different artists</span>
-            </div>
-            <div class="quick-stat animate-stat" style="--delay: 0.3s">
-                <div class="stat-circle">
-                    <span class="quick-number">{{ favorite_genre }}</span>
-                </div>
-                <span class="quick-label">top genre</span>
-            </div>
-        </div>
-
-        <!-- Top Song Highlight with Gradient -->
-        <div class="hero-card slide-up">
-            <div class="card-glow"></div>
-            <div class="hero-card-content">
-                <div class="hero-card-header">
-                    <i class="fas fa-crown crown-icon"></i>
-                    <h2>Your Most Played</h2>
+            <div class="terminal-content">
+                <div class="command-line">
+                    <span class="prompt">&gt;</span> 
+                    <span class="command">QUERY TOP_TRACK --year={{ year }}</span>
                 </div>
                 {% if top_songs %}
-                <div class="hero-song">
-                    <div class="hero-song-info">
-                        <h3 class="song-title">{{ top_songs[0][0].title }}</h3>
-                        <p class="artist-name">{{ top_songs[0][1].name }}</p>
+                <div class="terminal-output">
+                    <div class="output-line">EXECUTING...</div>
+                    <div class="output-line blinking">█</div>
+                    <div class="output-line success">
+                        <span class="label">RESULT:</span>
+                        <span class="value">{{ top_songs[0][0].title }}</span>
                     </div>
-                    <div class="hero-song-plays">
-                        <span class="play-count">{{ top_songs[0][2] }}</span>
-                        <span class="play-label">plays</span>
+                    <div class="output-line">
+                        <span class="label">ARTIST:</span>
+                        <span class="value">{{ top_songs[0][1].name }}</span>
+                    </div>
+                    <div class="output-line highlight">
+                        <span class="label">PLAYS:</span>
+                        <span class="value big">{{ top_songs[0][2] }}x</span>
                     </div>
                 </div>
                 {% endif %}
             </div>
+            <div class="terminal-footer">
+                <span>═══════════════════════════════════════════════════════</span>
+            </div>
         </div>
 
-        <!-- More Top Tracks -->
-        <div class="wrapped-section">
-            <h2 class="section-title fade-in">More Top Tracks</h2>
-            <div class="podium-list">
-                {% for song, artist, count in top_songs[1:4] %}
-                <div class="podium-item rank-{{ loop.index + 1 }}" style="--item-delay: {{ loop.index * 0.1 }}s">
-                    <div class="rank-badge">#{{ loop.index + 1 }}</div>
-                    <div class="podium-content">
-                        <strong class="track-title">{{ song.title }}</strong>
-                        <span class="track-artist">{{ artist.name }}</span>
-                        <div class="play-bar">
-                            <div class="play-bar-fill" style="width: {{ 100 - (loop.index - 1) * 20 }}%"></div>
-                        </div>
-                    </div>
-                    <div class="play-count-badge">{{ count }}</div>
-                </div>
-                {% endfor %}
-            </div>
+        <!-- Navigation Prompt -->
+        <div class="nav-prompt">
+            <span class="prompt-text">&gt; PRESS [STATS] TO VIEW DETAILED ANALYTICS_</span>
         </div>
 </div>
 {% endblock %}

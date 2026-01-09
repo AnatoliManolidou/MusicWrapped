@@ -11,30 +11,39 @@
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <i class="fas fa-music"></i>
-                <span>Music Wrapped</span>
+        <div class="dos-header">
+            <div class="dos-header-line">
+                ╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
             </div>
-            
-            {% if session.user_id %}
-            <ul class="nav-menu">
-                {% if session.role == 'Content_Manager' %}
-                    <li><a href="{{ url_for('content_manager.index') }}"><i class="fas fa-dashboard"></i> Dashboard</a></li>
-                    <li><a href="{{ url_for('content_manager.artists') }}"><i class="fas fa-microphone"></i> Artists</a></li>
-                    <li><a href="{{ url_for('content_manager.albums') }}"><i class="fas fa-record-vinyl"></i> Albums</a></li>
-                    <li><a href="{{ url_for('content_manager.songs') }}"><i class="fas fa-music"></i> Songs</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('dashboard.home') }}"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="{{ url_for('dashboard.history') }}"><i class="fas fa-history"></i> History</a></li>
-                    <li><a href="{{ url_for('dashboard.stats') }}"><i class="fas fa-chart-line"></i> Stats</a></li>
+            <div class="dos-header-content">
+                <span class="dos-border">║</span>
+                <div class="nav-brand">
+                    <span>♪ MUSIC_WRAPPED.SYS v1.0</span>
+                </div>
+                
+                {% if session.user_id %}
+                <div class="nav-menu">
+                    {% if session.role == 'Content_Manager' %}
+                        <a href="{{ url_for('content_manager.index') }}">[DASHBOARD]</a>
+                        <a href="{{ url_for('content_manager.artists') }}">[ARTISTS]</a>
+                        <a href="{{ url_for('content_manager.albums') }}">[ALBUMS]</a>
+                        <a href="{{ url_for('content_manager.songs') }}">[SONGS]</a>
+                    {% else %}
+                        <a href="{{ url_for('dashboard.home') }}">[HOME]</a>
+                        <a href="{{ url_for('dashboard.history') }}">[HISTORY]</a>
+                        <a href="{{ url_for('dashboard.stats') }}">[STATS]</a>
+                    {% endif %}
+                </div>
+                <div class="nav-right">
+                    <span class="user-display">USER: {{ session.username }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="logout-btn">[EXIT]</a>
+                </div>
                 {% endif %}
-                <li class="user-menu">
-                    <span><i class="fas fa-user"></i> {{ session.username }}</span>
-                    <a href="{{ url_for('auth.logout') }}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                </li>
-            </ul>
-            {% endif %}
+                <span class="dos-border">║</span>
+            </div>
+            <div class="dos-header-line">
+                ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+            </div>
         </div>
     </nav>
 

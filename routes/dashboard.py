@@ -112,6 +112,14 @@ def home():
         extract('year', UserListensSong.timestamp_start) == current_year
     ).scalar() or 0
     
+    # Total plays (all listening sessions)
+    total_plays = db.session.query(
+        func.count(UserListensSong.timestamp_start)
+    ).filter(
+        UserListensSong.user_id == user_id,
+        extract('year', UserListensSong.timestamp_start) == current_year
+    ).scalar() or 0
+    
     # Liked songs count
     liked_count = UserLikesSong.query.filter_by(user_id=user_id).count()
     
@@ -122,6 +130,7 @@ def home():
                          top_artists=top_artists,
                          favorite_genre=favorite_genre[0] if favorite_genre else 'N/A',
                          unique_songs=unique_songs,
+                         total_plays=total_plays,
                          liked_count=liked_count,
                          year=current_year)
 
