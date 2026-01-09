@@ -19,7 +19,7 @@
             
             {% if session.user_id %}
             <ul class="nav-menu">
-                {% if session.user_type == 'Content_Manager' %}
+                {% if session.role == 'Content_Manager' %}
                     <li><a href="{{ url_for('content_manager.index') }}"><i class="fas fa-dashboard"></i> Dashboard</a></li>
                     <li><a href="{{ url_for('content_manager.artists') }}"><i class="fas fa-microphone"></i> Artists</a></li>
                     <li><a href="{{ url_for('content_manager.albums') }}"><i class="fas fa-record-vinyl"></i> Albums</a></li>

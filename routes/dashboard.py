@@ -4,7 +4,7 @@ Shows wrapped statistics, listening history, and insights
 """
 
 from flask import Blueprint, render_template, session, redirect, url_for, flash, request
-from models import db, User, Song, Artist, UserListensSong, UserLikesSong
+from models import db, User, Song, Artist, UserListensSong, UserLikesSong, Playlist, PlaylistMoods, Album
 from sqlalchemy import func, desc, extract, text
 from datetime import datetime, timedelta
 
@@ -38,7 +38,7 @@ def home():
         return redirect(url_for('auth.login'))
     
     # Get current year for "wrapped"
-    current_year = datetime.now().year
+    current_year = 2025
     
     # Total listening time (in minutes)
     total_time_query = db.session.query(
@@ -161,7 +161,7 @@ def stats():
     user_id = session.get('user_id')
     
     # Get monthly listening trends for the current year
-    current_year = datetime.now().year
+    current_year = 2025
     monthly_stats = db.session.query(
         extract('month', UserListensSong.timestamp_start).label('month'),
         func.count(UserListensSong.song_id).label('play_count')
@@ -210,10 +210,42 @@ def stats():
         if partner_name:
             jam_partners.add(partner_name)
     
+    # Number of playlists created by the user
+    playlist_count = db.session.query(func.count()).select_from(Playlist).filter_by(user_id=user_id).scalar()
+
+    # Most common mood in user's playlists
+    playlist_mood = db.session.query(
+        PlaylistMoods.mood,
+        func.count(PlaylistMoods.mood).label('count')
+    ).join(Playlist, Playlist.playlist_id == PlaylistMoods.playlist_id)
+    playlist_mood = playlist_mood.filter(Playlist.user_id == user_id)
+    playlist_mood = playlist_mood.group_by(PlaylistMoods.mood).order_by(desc('count')).first()
+
+    # User's favorite album (most songs listened from)
+    favorite_album = db.session.query(
+        Album.title,
+        func.count(UserListensSong.song_id).label('count')
+    ).join(Song, Song.album_id == Album.album_id)
+    favorite_album = favorite_album.join(UserListensSong, UserListensSong.song_id == Song.song_id)
+    favorite_album = favorite_album.filter(UserListensSong.user_id == user_id)
+    favorite_album = favorite_album.group_by(Album.album_id).order_by(desc('count')).first()
+
+    # Distribution of user's listening by genre
+    genre_dist = db.session.query(
+        Song.genre,
+        func.count(UserListensSong.song_id).label('count')
+    ).join(UserListensSong, UserListensSong.song_id == Song.song_id)
+    genre_dist = genre_dist.filter(UserListensSong.user_id == user_id)
+    genre_dist = genre_dist.group_by(Song.genre).order_by(desc('count')).all()
+
     return render_template('dashboard/stats.html',
                          monthly_stats=monthly_stats,
                          device_stats=device_stats,
                          jam_count=len(jam_sessions),
                          total_jam_time=int(total_jam_time),
                          jam_partners=len(jam_partners),
-                         year=current_year)
+                         year=current_year,
+                         playlist_count=playlist_count,
+                         playlist_mood=playlist_mood[0] if playlist_mood else None,
+                         favorite_album=favorite_album[0] if favorite_album else None,
+                         genre_dist=genre_dist)

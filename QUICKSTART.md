@@ -58,14 +58,14 @@ Navigate to: **http://localhost:5000**
 ### 7. Login
 
 **End User (to see Wrapped dashboard):**
-- Username: `nikos_89` (or any user from your database)
-- Password: (check your database - users table)
-- User Type: End User
+- Username: `pierre_frt`
+- Password: `Pierre@33`
 
 **Content Manager (to manage content):**
-- Username: Any admin user
-- Password: Your admin password
-- User Type: Content Manager
+- Username: `maria_bel`
+- Password: `Maria_It3`
+
+*See `user_credentials.md` for all available users*
 
 ## 📁 Project Structure
 
@@ -108,30 +108,6 @@ MusicWrapped/
 pip install -r requirements.txt
 ```
 
-**Template errors?**
-Make sure all files were created. Check the main README.md for complete list.
-
-## 📝 Next Steps
-
-Once you have the basic app running, you can:
-
-1. **Create missing templates** for full functionality
-2. **Add more features** (playlists, recommendations)
-3. **Improve styling** (charts, animations)
-4. **Deploy online** (Heroku, PythonAnywhere)
-
-## 🎓 For Your Deliverable
-
-Make sure to include:
-- ✅ Source code (this entire folder)
-- ✅ README.md (setup instructions)
-- ✅ Screenshots of the application
-- ✅ Video demonstration (optional but recommended)
-
 ## 📧 Need Help?
 
 Check the full README.md for detailed documentation.
-
----
-
-**Made with ❤️ for Database Systems Course - AUTH**

@@ -3,15 +3,16 @@
 {% block title %}Your Stats {{ year }} - Music Wrapped{% endblock %}
 
 {% block content %}
-<div class="dashboard-container stats-page">
-    <div class="page-header">
-        <h1><i class="fas fa-chart-line"></i> Your {{ year }} Statistics</h1>
-        <p>Deep dive into your listening patterns</p>
+<div class="stats-page scroll-reveal-page">
+    <div class="stats-hero">
+        <h1 class="stats-hero-title">🎵 Your {{ year }} Music Journey 🎵</h1>
+        <p class="stats-hero-subtitle">Let's explore what made your year so special!</p>
     </div>
 
     <!-- Monthly Listening Trends -->
-    <div class="stats-section">
-        <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Monthly Listening Activity</h2>
+    <div class="stats-section monthly-section reveal-section" data-reveal>
+        <h2 class="section-title fun-title">📅 Your Year in Music</h2>
+        <p class="section-subtitle">Watch your listening journey unfold month by month!</p>
         <div class="monthly-chart">
             {% set month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] %}
             {% set monthly_dict = {} %}
@@ -37,32 +38,105 @@
     </div>
 
     <!-- Quick Insights -->
-    <div class="stats-section">
-        <h2 class="section-title"><i class="fas fa-lightbulb"></i> Quick Insights</h2>
+    <div class="stats-section insights-section reveal-section" data-reveal>
+        <h2 class="section-title fun-title">✨ Fun Facts About You</h2>
+        <p class="section-subtitle">Here's what makes your music taste unique!</p>
         <div class="insights-grid">
             {% if monthly_stats %}
-            <div class="insight-card">
-                <i class="fas fa-fire"></i>
-                <h3>Most Active Month</h3>
+            <div class="insight-card playful-card">
+                <div class="card-icon fire-icon">🔥</div>
+                <h3>Peak Performance</h3>
                 {% set busiest = monthly_stats|sort(attribute=1, reverse=true)|first %}
-                <p>{{ month_names[busiest[0] - 1] }} with {{ busiest[1] }} plays</p>
+                <p class="big-number">{{ month_names[busiest[0] - 1] }}</p>
+                <p class="card-description">{{ busiest[1] }} plays - you were on fire!</p>
             </div>
             {% endif %}
             
-            <div class="insight-card">
-                <i class="fas fa-users"></i>
-                <h3>Jam Sessions</h3>
-                <p>{{ jam_count }} sessions with {{ jam_partners }} friends</p>
+            <div class="insight-card playful-card">
+                <div class="card-icon">🎉</div>
+                <h3>Social Butterfly</h3>
+                <p class="big-number">{{ jam_count }}</p>
+                <p class="card-description">jam sessions with {{ jam_partners }} friends</p>
             </div>
             
             {% if total_jam_time > 0 %}
-            <div class="insight-card">
-                <i class="fas fa-clock"></i>
-                <h3>Total Jam Time</h3>
-                <p>{{ total_jam_time }} minutes</p>
+            <div class="insight-card playful-card">
+                <div class="card-icon">⏰</div>
+                <h3>Party Hours</h3>
+                <p class="big-number">{{ (total_jam_time / 60)|round(1) }}h</p>
+                <p class="card-description">jamming with friends</p>
             </div>
             {% endif %}
         </div>
     </div>
+
+    <!-- User Extra Stats -->
+    <div class="stats-section extra-stats-section reveal-section" data-reveal>
+        <h2 class="section-title fun-title">🎨 Your Musical Personality</h2>
+        <p class="section-subtitle">Discover what your listening habits say about you!</p>
+        <div class="insights-grid personality-grid">
+            <div class="insight-card personality-card">
+                <div class="card-icon">🎧</div>
+                <h3>Playlist Creator</h3>
+                <p class="big-number">{{ playlist_count }}</p>
+                <p class="card-description">playlists crafted with love</p>
+            </div>
+            <div class="insight-card personality-card mood-card">
+                <div class="card-icon">{{ '😊' if playlist_mood == 'Happy' else '😌' if playlist_mood == 'Calm' else '⚡' if playlist_mood == 'Energetic' else '🤘' if playlist_mood == 'Aggressive' else '🎵' }}</div>
+                <h3>Your Vibe Is</h3>
+                <p class="big-number mood-text">{{ playlist_mood if playlist_mood else 'Mixed' }}</p>
+                <p class="card-description">most common playlist mood</p>
+            </div>
+            <div class="insight-card personality-card album-card">
+                <div class="card-icon">💿</div>
+                <h3>Album Champion</h3>
+                <p class="album-title">{{ favorite_album if favorite_album else 'Keep Exploring!' }}</p>
+                <p class="card-description">your most played album</p>
+            </div>
+            <div class="insight-card personality-card genre-card">
+                <div class="card-icon">🎸</div>
+                <h3>Genre Explorer</h3>
+                {% if genre_dist %}
+                <div class="genre-bars">
+                    {% set total_plays = genre_dist|sum(attribute=1) %}
+                    {% for genre, count in genre_dist[:3] %}
+                    <div class="genre-bar-item">
+                        <span class="genre-name">{{ genre }}</span>
+                        <div class="genre-bar-bg">
+                            <div class="genre-bar-fill" style="width: {{ (count / total_plays * 100)|round|int }}%"></div>
+                        </div>
+                        <span class="genre-count">{{ count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="big-number">Start Exploring!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+// Apple-style scroll reveal animation
+document.addEventListener('DOMContentLoaded', function() {
+    const observerOptions = {
+        threshold: 0.3,
+        rootMargin: '0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('[data-reveal]').forEach(section => {
+        observer.observe(section);
+    });
+});
+</script>
+
 {% endblock %}

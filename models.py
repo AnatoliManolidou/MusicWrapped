@@ -171,3 +171,9 @@ class UserJamsUser(db.Model):
     user_id_2 = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
     timestamp_start = db.Column(db.DateTime, primary_key=True, nullable=False)
     timestamp_end = db.Column(db.DateTime, nullable=False)
+
+class PlaylistMoods(db.Model):
+    __tablename__ = 'playlist_moods'
+    
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.playlist_id'), primary_key=True)
+    mood = db.Column(db.Enum('Happy', 'Melancholic', 'Energetic', 'Dark', 'Calm', 'Focused', 'Relaxing', 'Dramatic', 'Aggressive', 'Cool'), primary_key=True, nullable=False)
