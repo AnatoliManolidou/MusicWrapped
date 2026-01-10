@@ -71,6 +71,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         output += '<div class="result-line">No data available</div>';
                     }
+                } else if (type === 'chart') {
+                    // Handle monthly chart
+                    output = `<div class="result-line success">
+                        <span class="result-label">${label}:</span>
+                    </div>`;
+                    
+                    const monthlyData = window.monthlyData || {};
+                    const months = monthlyData.months || [];
+                    const data = monthlyData.data || [];
+                    const maxCount = Math.max(...data, 1);
+                    
+                    output += '<div class="monthly-chart-terminal">';
+                    months.forEach((month, i) => {
+                        const count = data[i] || 0;
+                        const height = maxCount > 0 ? (count / maxCount * 100).toFixed(0) : 0;
+                        const isTopMonth = (i + 1) === monthlyData.topMonth;
+                        const displayHeight = count > 0 ? Math.max(height, 15) : 0; // Minimum 15% if has plays for visibility
+                        output += `<div class="chart-bar-container ${isTopMonth ? 'top-month' : ''}">
+                            <div class="chart-bar" style="height: ${displayHeight}%; ${count === 0 ? 'border: 1px dashed #555; background: transparent;' : ''}">
+                                ${count > 0 ? `<span class="bar-value">${count}</span>` : ''}
+                            </div>
+                            <span class="bar-label">${month}</span>
+                        </div>`;
+                    });
+                    output += '</div>';
+                    
+                    // Add top month info
+                    if (monthlyData.topMonth && monthlyData.topMonthCount > 0) {
+                        const topMonthName = months[monthlyData.topMonth - 1];
+                        output += `<div class="result-line highlight">
+                            <span class="result-extra">PEAK MONTH: ${topMonthName.toUpperCase()} | ${monthlyData.topMonthCount} PLAYS</span>
+                        </div>`;
+                    }
                 } else {
                     // Handle single value results
                     output = `<div class="result-line success">
