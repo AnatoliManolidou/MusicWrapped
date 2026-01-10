@@ -12,75 +12,62 @@
                 <span class="hero-number">{{ total_time }}</span>
                 <span class="hero-label">MINUTES OF PURE MUSIC</span>
             </div>
-            <div class="terminal-cursor-line">_</div>
+            <div class="terminal-cursor-line">˅</div>
         </div>
 
-        <!-- DOS-Style Stats Grid -->
-        <div class="dos-stats-grid">
-            <div class="dos-box" style="--delay: 0.1s">
-                <div class="dos-box-header">
-                    <span>┌─ TOTAL PLAYS ─┐</span>
-                </div>
-                <div class="dos-box-content">
-                    <div class="ascii-number">{{ total_plays }}</div>
-                    <div class="dos-label">LISTENING SESSIONS</div>
-                </div>
-                <div class="dos-box-footer">└────────────────┘</div>
-            </div>
-
-            <div class="dos-box" style="--delay: 0.2s">
-                <div class="dos-box-header">
-                    <span>┌─ TOP ARTIST ─┐</span>
-                </div>
-                <div class="dos-box-content">
-                    {% if top_artists %}
-                    <div class="ascii-genre">{{ top_artists[0][0].name[:20] }}</div>
-                    <div class="dos-label">FAVORITE ARTIST</div>
-                    {% endif %}
-                </div>
-                <div class="dos-box-footer">└───────────────┘</div>
-            </div>
-
-            <div class="dos-box" style="--delay: 0.3s">
-                <div class="dos-box-header">
-                    <span>┌─ TOP GENRE ─┐</span>
-                </div>
-                <div class="dos-box-content">
-                    <div class="ascii-genre">{{ favorite_genre }}</div>
-                    <div class="dos-label">FAVORITE GENRE</div>
-                </div>
-                <div class="dos-box-footer">└──────────────┘</div>
-            </div>
-        </div>
-
-        <!-- DOS Command Line Style Top Track -->
-        <div class="terminal-section">
+        <!-- Interactive Terminal -->
+        <div class="interactive-terminal">
             <div class="terminal-header">
                 <span>═══════════════════════════════════════════════════════</span>
             </div>
             <div class="terminal-content">
-                <div class="command-line">
-                    <span class="prompt">&gt;</span> 
-                    <span class="command">QUERY TOP_TRACK --year={{ year }}</span>
+                <div class="terminal-title">AVAILABLE QUERIES:</div>
+                
+                <div class="command-menu" id="commandMenu">
+                    <div class="command-item" data-index="0" data-result="{{ total_plays }}" data-label="LISTENING SESSIONS">
+                        <span class="prompt">&gt;</span> QUERY TOTAL_PLAYS --year={{ year }}
+                    </div>
+                    
+                    <div class="command-item" data-index="1" data-type="list" data-label="TOP 5 ARTISTS">
+                        <span class="prompt">&gt;</span> QUERY TOP_ARTISTS --limit=5 --year={{ year }}
+                    </div>
+                    
+                    <div class="command-item" data-index="2" data-type="list" data-label="TOP 5 SONGS">
+                        <span class="prompt">&gt;</span> QUERY TOP_SONGS --limit=5 --year={{ year }}
+                    </div>
+                    
+                    <div class="command-item" data-index="3" data-type="list" data-label="TOP 5 ALBUMS">
+                        <span class="prompt">&gt;</span> QUERY TOP_ALBUMS --limit=5 --year={{ year }}
+                    </div>
+                    
+                    <div class="command-item" data-index="4" data-result="{% if top_songs %}{{ top_songs[0][0].title }}{% endif %}" data-label="MOST PLAYED TRACK" data-extra="{% if top_songs %}BY: {{ top_songs[0][1].name }} | TOTAL PLAYS: {{ top_songs[0][2] }}x{% endif %}">
+                        <span class="prompt">&gt;</span> QUERY TOP_SONG --with-count --year={{ year }}
+                    </div>
+                    
+                    <div class="command-item" data-index="5" data-result="{% if jam_count > 0 %}{{ top_jam_partner }}{% else %}Looks like you kept it solo this year — your jam era is still loading.{% endif %}" data-label="{% if jam_count > 0 %}TOP JAM SESSION{% else %}JAM SESSIONS{% endif %}" data-extra="{% if jam_count > 0 %}OUT OF {{ jam_count }} SESSIONS | DURATION: {{ top_jam_duration }} MINUTES{% endif %}">
+                        <span class="prompt">&gt;</span> QUERY JAM_SESSIONS --highlight --year={{ year }}
+                    </div>
+                    
+                    <div class="command-item" data-index="6" data-result="{{ top_mood }}" data-label="YOUR MOOD" data-extra="{% if top_mood == 'Happy' %}Pure good vibes — your year was powered by smiles.{% elif top_mood == 'Melancholic' %}A beautiful kind of sad — emotional, thoughtful, and deep.{% elif top_mood == 'Energetic' %}Fast beats, big moves — you were always in motion.{% elif top_mood == 'Dark' %}Moody, mysterious, and a little rebellious.{% elif top_mood == 'Calm' %}Soft sounds, quiet moments — your comfort zone.{% elif top_mood == 'Focused' %}Locked in. Tuned out. You were in your zone.{% elif top_mood == 'Relaxing' %}Easygoing tracks for slow, peaceful days.{% elif top_mood == 'Dramatic' %}Every song was a main-character moment.{% elif top_mood == 'Aggressive' %}Loud, bold, and unapologetic.{% elif top_mood == 'Cool' %}Effortlessly smooth — your playlist had style.{% endif %}">
+                        <span class="prompt">&gt;</span> QUERY MOOD_ANALYSIS --year={{ year }}
+                    </div>
+                    
+                    <div class="command-item" data-index="7" data-result="{{ favorite_genre }}" data-label="TOP GENRE" data-extra="{% if favorite_genre == 'Pop' %}Catchy hooks and big choruses — your soundtrack was everywhere.{% elif favorite_genre == 'Rock' %}Real guitars, real attitude.{% elif favorite_genre == 'Indie' %}You like your music rare and underrated.{% elif favorite_genre == 'Rap' %}Bars, beats, and pure confidence.{% elif favorite_genre == 'Metal' %}Loud, heavy, and fearless.{% endif %}">
+                        <span class="prompt">&gt;</span> QUERY TOP_GENRE --year={{ year }}
+                    </div>
                 </div>
-                {% if top_songs %}
-                <div class="terminal-output">
-                    <div class="output-line">EXECUTING...</div>
-                    <div class="output-line blinking">█</div>
-                    <div class="output-line success">
-                        <span class="label">RESULT:</span>
-                        <span class="value">{{ top_songs[0][0].title }}</span>
-                    </div>
-                    <div class="output-line">
-                        <span class="label">ARTIST:</span>
-                        <span class="value">{{ top_songs[0][1].name }}</span>
-                    </div>
-                    <div class="output-line highlight">
-                        <span class="label">PLAYS:</span>
-                        <span class="value big">{{ top_songs[0][2] }}x</span>
-                    </div>
+
+                <div class="terminal-help">
+                    PRESS [↑↓] TO SELECT | PRESS [ENTER] TO EXECUTE
                 </div>
-                {% endif %}
+
+                <div class="terminal-result" id="terminalResult" style="display: none;">
+                    <div class="result-executing">
+                        EXECUTING QUERY<span class="dots"></span>
+                    </div>
+                    <div class="result-loader">█</div>
+                    <div class="result-output" id="resultOutput"></div>
+                </div>
             </div>
             <div class="terminal-footer">
                 <span>═══════════════════════════════════════════════════════</span>
@@ -92,4 +79,25 @@
             <span class="prompt-text">&gt; PRESS [STATS] TO VIEW DETAILED ANALYTICS_</span>
         </div>
 </div>
+
+<script>
+// Prepare data for JavaScript
+window.topArtistsData = [
+    {% for artist, count in top_artists %}
+    { name: "{{ artist.name }}", count: {{ count }} }{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+window.topSongsData = [
+    {% for song, artist, count in top_songs %}
+    { name: "{{ song.title }}", extra: "{{ artist.name }}", count: {{ count }} }{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+window.topAlbumsData = [
+    {% for album, artist, count in top_albums %}
+    { name: "{{ album.title }}", extra: "{{ artist.name }}", count: {{ count }} }{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+</script>
 {% endblock %}

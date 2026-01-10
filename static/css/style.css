@@ -1469,10 +1469,20 @@ tbody td a:hover {
 
 .terminal-cursor-line {
     margin-top: 30px;
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: var(--primary-color);
     opacity: 0;
-    animation: blink 1s infinite 1.6s, fadeIn 0.3s ease-out 1.6s forwards;
+    animation: fadeIn 0.3s ease-out 1.6s forwards, slowBounce 2s ease-in-out infinite 1.6s;
+}
+
+@keyframes slowBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+}
+
+@keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(20px); }
 }
 
 @keyframes bounce {
@@ -2399,7 +2409,7 @@ tbody td a:hover {
     padding: 0;
     background: var(--card-bg);
     animation: slideIn 0.6s ease-out;
-    animation-delay: calc(1.8s + var(--delay));
+    animation-delay: calc(3.5s + var(--delay));
     opacity: 0;
     animation-fill-mode: forwards;
 }
@@ -2456,7 +2466,7 @@ tbody td a:hover {
     border: 2px solid var(--primary-color);
     background: var(--card-bg);
     opacity: 0;
-    animation: fadeInUp 0.8s ease-out 2.5s forwards;
+    animation: fadeInUp 0.8s ease-out 4.5s forwards;
 }
 
 .terminal-header,

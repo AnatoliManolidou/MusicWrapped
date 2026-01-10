@@ -123,15 +123,91 @@ def home():
     # Liked songs count
     liked_count = UserLikesSong.query.filter_by(user_id=user_id).count()
     
+    # Top 5 albums
+    top_albums = db.session.query(
+        Album,
+        Artist,
+        func.count(UserListensSong.song_id).label('play_count')
+    ).join(
+        Song, Album.album_id == Song.album_id
+    ).join(
+        Artist, Song.artist_id == Artist.artist_id
+    ).join(
+        UserListensSong, Song.song_id == UserListensSong.song_id
+    ).filter(
+        UserListensSong.user_id == user_id,
+        extract('year', UserListensSong.timestamp_start) == current_year
+    ).group_by(
+        Album.album_id, Artist.artist_id
+    ).order_by(
+        desc('play_count')
+    ).limit(5).all()
+    
+    # Top mood from listened songs
+    from models import SongMoods
+    top_mood = db.session.query(
+        SongMoods.mood,
+        func.count(UserListensSong.song_id).label('count')
+    ).join(
+        Song, SongMoods.song_id == Song.song_id
+    ).join(
+        UserListensSong, Song.song_id == UserListensSong.song_id
+    ).filter(
+        UserListensSong.user_id == user_id,
+        extract('year', UserListensSong.timestamp_start) == current_year
+    ).group_by(
+        SongMoods.mood
+    ).order_by(
+        desc('count')
+    ).first()
+    
+    # Jam sessions stats
+    from models import UserJamsUser
+    jam_sessions = db.session.query(
+        UserJamsUser,
+        User.username
+    ).outerjoin(
+        User,
+        db.or_(
+            User.user_id == UserJamsUser.user_id_2,
+            User.user_id == UserJamsUser.user_id_1
+        )
+    ).filter(
+        db.or_(
+            UserJamsUser.user_id_1 == user_id,
+            UserJamsUser.user_id_2 == user_id
+        ),
+        User.user_id != user_id,
+        extract('year', UserJamsUser.timestamp_start) == current_year
+    ).all()
+    
+    # Find longest jam session
+    top_jam = None
+    top_jam_partner = None
+    top_jam_duration = 0
+    total_jam_count = len(jam_sessions)
+    
+    for jam, partner_name in jam_sessions:
+        duration = (jam.timestamp_end - jam.timestamp_start).total_seconds() / 60
+        if duration > top_jam_duration:
+            top_jam_duration = duration
+            top_jam_partner = partner_name
+            top_jam = jam
+    
     return render_template('dashboard/home.html',
                          user=user,
                          total_time=total_time_query,
                          top_songs=top_songs,
                          top_artists=top_artists,
+                         top_albums=top_albums,
                          favorite_genre=favorite_genre[0] if favorite_genre else 'N/A',
                          unique_songs=unique_songs,
                          total_plays=total_plays,
                          liked_count=liked_count,
+                         top_mood=top_mood[0] if top_mood else 'Mixed',
+                         jam_count=total_jam_count,
+                         top_jam_partner=top_jam_partner,
+                         top_jam_duration=int(top_jam_duration),
                          year=current_year)
 
 @bp.route('/history')
