@@ -74,7 +74,8 @@ MusicWrapped/
   - `clear` - Clear terminal history
 
 #### **Statistics & Analytics**
-- **Diversity Index:** Measures evenness of play distribution (0-100%)
+- **Diversity Index:** Measures evenness of play distribution (0-100%, 0% when only 1 item)
+- **Dynamic Messages:** Total playback message adapts to actual listening (500+ min vs 10 min)
 - **Consistency Metrics:** Active months percentage with dynamic messages
 - **Longest Streak:** Consecutive months with ≥5 plays
 - **Trend Indicators:** Month-over-month changes (↑ increase, ↓ decrease)

@@ -50,7 +50,7 @@
                 <div class="terminal-history" id="terminalHistory"></div>
                 
                 <div class="command-menu" id="commandMenu" style="display: none;">
-                    <div class="command-item" data-index="0" data-result="{{ total_plays }}" data-label="TOTAL LISTENING SESSIONS" data-extra="You kept the music spinning all year long." data-status="PLAYBACK DATA RETRIEVED">
+                    <div class="command-item" data-index="0" data-result="{{ total_plays }}" data-label="TOTAL LISTENING SESSIONS" data-extra="" data-status="PLAYBACK DATA RETRIEVED">
                         <span class="prompt">&gt;</span> QUERY TOTAL_PLAYS --year={{ year }}
                     </div>
                     
@@ -489,6 +489,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     const minEmpty = barWidth - minFill;
                     const minBar = '█'.repeat(minFill) + '-'.repeat(minEmpty);
                     
+                    // Dynamic message based on listening amount
+                    let message = '';
+                    if (totalMins >= 500) {
+                        message = 'You kept the music spinning all year long.';
+                    } else if (totalMins >= 200) {
+                        message = 'A solid year of listening.';
+                    } else if (totalMins >= 50) {
+                        message = 'Music was part of your year.';
+                    } else if (totalMins >= 10) {
+                        message = 'You dipped into the music library.';
+                    } else {
+                        message = 'Just getting started with your music journey.';
+                    }
+                    
                     output += `<div class="result-box">
                         <div class="box-line">${'='.repeat(36)}</div>
                         <div class="box-line">           TOTAL PLAYBACK</div>
@@ -496,19 +510,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="box-line">Plays:   ${numPlays.toString().padStart(3)} [${playBar}]</div>
                         <div class="box-line">Minutes: ${totalMins.toString().padStart(3)} [${minBar}]</div>
                     </div>
-                    <div class="result-note">${extra || ''}</div>`;
+                    <div class="result-note">${message}</div>`;
                 }
                 // Top Artists (index 1)
                 else if (index === 1) {
                     const listData = window.topArtistsData || [];
                     
-                    // Calculate diversity index
-                    const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
-                    const mean = totalPlays / listData.length;
-                    const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
-                    const stdDev = Math.sqrt(variance);
-                    const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
-                    const diversityPercent = Math.round(evenness * 100);
+                    // Calculate diversity index (0% if only 1 item)
+                    let diversityPercent = 0;
+                    if (listData.length > 1) {
+                        const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
+                        const mean = totalPlays / listData.length;
+                        const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
+                        const stdDev = Math.sqrt(variance);
+                        const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
+                        diversityPercent = Math.round(evenness * 100);
+                    }
                     const barWidth = 25;
                     const diversityFill = Math.min(barWidth, Math.round((diversityPercent / 100) * barWidth));
                     const diversityEmpty = barWidth - diversityFill;
@@ -532,13 +549,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 else if (index === 2) {
                     const listData = window.topSongsData || [];
                     
-                    // Calculate diversity index
-                    const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
-                    const mean = totalPlays / listData.length;
-                    const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
-                    const stdDev = Math.sqrt(variance);
-                    const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
-                    const diversityPercent = Math.round(evenness * 100);
+                    // Calculate diversity index (0% if only 1 item)
+                    let diversityPercent = 0;
+                    if (listData.length > 1) {
+                        const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
+                        const mean = totalPlays / listData.length;
+                        const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
+                        const stdDev = Math.sqrt(variance);
+                        const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
+                        diversityPercent = Math.round(evenness * 100);
+                    }
                     const barWidth = 25;
                     const diversityFill = Math.min(barWidth, Math.round((diversityPercent / 100) * barWidth));
                     const diversityEmpty = barWidth - diversityFill;
@@ -563,13 +583,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 else if (index === 3) {
                     const listData = window.topAlbumsData || [];
                     
-                    // Calculate diversity index
-                    const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
-                    const mean = totalPlays / listData.length;
-                    const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
-                    const stdDev = Math.sqrt(variance);
-                    const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
-                    const diversityPercent = Math.round(evenness * 100);
+                    // Calculate diversity index (0% if only 1 item)
+                    let diversityPercent = 0;
+                    if (listData.length > 1) {
+                        const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
+                        const mean = totalPlays / listData.length;
+                        const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
+                        const stdDev = Math.sqrt(variance);
+                        const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
+                        diversityPercent = Math.round(evenness * 100);
+                    }
                     const barWidth = 25;
                     const diversityFill = Math.min(barWidth, Math.round((diversityPercent / 100) * barWidth));
                     const diversityEmpty = barWidth - diversityFill;

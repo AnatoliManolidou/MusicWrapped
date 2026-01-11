@@ -46,11 +46,6 @@ def logout():
     flash('You have been logged out', 'success')
     return redirect(url_for('auth.login'))
 
-@bp.route('/register', methods=['GET', 'POST'])
-def register():
-    """Registration page (to be implemented)"""
-    return render_template('auth/register.html')
-
 
 # Helper function for other routes
 def get_current_user():

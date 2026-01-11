@@ -521,9 +521,10 @@ MusicWrapped/
 ### 2. Diversity Index Calculation
 - Measures evenness of play distribution
 - Formula: `1 - (stdDev / mean)`
-- Higher score = more balanced listening
-- Lower score = concentrated favorites
-- Displayed with progress bars
+- **Edge case:** Returns 0% when only 1 item (no diversity possible)
+- Higher score = more balanced listening (e.g., 80% means very even distribution)
+- Lower score = concentrated favorites (e.g., 20% means one dominant item)
+- Displayed with 25-character progress bars
 
 ### 3. Consistency Metrics
 - **Consistency %:** Months with ≥5 plays / 12 * 100
