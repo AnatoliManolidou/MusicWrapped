@@ -214,6 +214,7 @@ def home():
     
     return render_template('dashboard/home.html',
                          user=user,
+                         username=user.username,
                          total_time=total_time_query,
                          top_songs=top_songs,
                          top_artists=top_artists,

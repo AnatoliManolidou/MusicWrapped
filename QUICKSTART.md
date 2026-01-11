@@ -1,7 +1,5 @@
 # Music Wrapped - Quick Start Guide
 
-## 🚀 Quick Setup (5 minutes)
-
 ### 1. Update Database Password
 
 Open `config.py` and change line 13:
@@ -107,7 +105,3 @@ MusicWrapped/
 .\venv\Scripts\Activate
 pip install -r requirements.txt
 ```
-
-## 📧 Need Help?
-
-Check the full README.md for detailed documentation.

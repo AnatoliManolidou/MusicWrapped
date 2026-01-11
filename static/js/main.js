@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Reset title
                     const terminalTitle = document.getElementById('terminalTitle');
                     if (terminalTitle) {
-                        terminalTitle.textContent = 'AVAILABLE QUERIES:';
+                        terminalTitle.textContent = 'MUSIC WRAPPED TERMINAL v2.5';
                     }
                     
                     // Show executing message and loader again for next query
@@ -224,8 +224,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         loader.style.display = 'block';
                     }
                     
-                    commandMenu.style.display = 'block';
-                    document.querySelector('.terminal-help').style.display = 'block';
+                    // Show instructions instead of menu
+                    const instructions = document.querySelector('.terminal-instructions');
+                    if (instructions) {
+                        instructions.style.display = 'block';
+                    }
+                    
                     terminalResult.style.display = 'none';
                     resultOutput.innerHTML = '';
                     document.removeEventListener('keydown', returnHandler);

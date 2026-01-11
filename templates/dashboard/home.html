@@ -4,27 +4,53 @@
 
 {% block content %}
 <div class="dashboard-container terminal-dashboard">
+        <!-- Boot Sequence (Full Screen, Blank Background) -->
+        <div class="boot-sequence" id="bootSequence">
+            <div class="boot-line" style="animation-delay: 0s;">BOOTING MUSIC_WRAPPED.SYS…</div>
+            <div class="boot-line" style="animation-delay: 0.8s;"><br></div>
+            <div class="boot-line" style="animation-delay: 1.2s;">Welcome, {{ username }}.</div>
+            <div class="boot-line" style="animation-delay: 2s;">Initializing personal audio analysis…</div>
+            <div class="boot-line" style="animation-delay: 3s;">Scanning your listening history<span class="boot-dots"></span></div>
+            <div class="boot-line" style="animation-delay: 4.2s;"><br></div>
+            <div class="boot-line boot-complete" style="animation-delay: 4.5s;">SYSTEM READY.</div>
+        </div>
+
         <!-- Hero Section with Animation -->
-        <div class="wrapped-hero animate-in">
+        <div class="wrapped-hero animate-in" id="mainContent" style="display: none;">
             <div class="terminal-prompt">&gt; LOADING_USER_DATA.exe</div>
             <h1 class="hero-title">THIS IS WHAT YOUR SOUND LOOKED LIKE IN {{ year }}</h1>
             <div class="hero-stat">
                 <span class="hero-number">{{ total_time }}</span>
                 <span class="hero-label">MINUTES OF PURE MUSIC</span>
             </div>
-            <div class="terminal-cursor-line">˅</div>
+            <div class="terminal-cursor-line">
+                <div class="scroll-arrow">˅</div>
+                <div class="scroll-text">SCROLL FOR MORE</div>
+            </div>
         </div>
 
         <!-- Interactive Terminal -->
-        <div class="interactive-terminal">
-            <div class="terminal-header">
+        <div class="interactive-terminal" id="interactiveTerminal" style="display: none;">
+            <!-- Terminal Header (Appears on Scroll) -->
+            <div class="terminal-header" id="terminalHeader" style="opacity: 0; transition: opacity 0.5s;">
                 <span>═══════════════════════════════════════════════════════</span>
             </div>
             <div class="terminal-content">
-                <div class="terminal-title" id="terminalTitle">AVAILABLE QUERIES:</div>
+                <div class="terminal-title" id="terminalTitle">MUSIC WRAPPED TERMINAL v1.0</div>
+                <div class="terminal-instructions">
+                    <p>&gt; Welcome to your personal music analytics system.</p>
+                    <p>&gt; All listening data from {{ year }} has been indexed and is ready for analysis.</p>
+                    <p>&gt;</p>
+                    <p>&gt; Type "help" to see available commands.</p>
+                    <p>&gt; Type "run [command]" to execute queries.</p>
+                    <p>&gt;</p>
+                </div>
                 
-                <div class="command-menu" id="commandMenu">
-                    <div class="command-item" data-index="0" data-result="{{ total_plays }}" data-label="TOTAL LISTENING SESSIONS" data-status="PLAYBACK DATA RETRIEVED">
+                <!-- Terminal History (accumulated output) -->
+                <div class="terminal-history" id="terminalHistory"></div>
+                
+                <div class="command-menu" id="commandMenu" style="display: none;">
+                    <div class="command-item" data-index="0" data-result="{{ total_plays }}" data-label="TOTAL LISTENING SESSIONS" data-extra="You kept the music spinning all year long." data-status="PLAYBACK DATA RETRIEVED">
                         <span class="prompt">&gt;</span> QUERY TOTAL_PLAYS --year={{ year }}
                     </div>
                     
@@ -57,8 +83,14 @@
                     </div>
                 </div>
 
-                <div class="terminal-help">
-                    PRESS [↑↓] TO SELECT | PRESS [ENTER] TO EXECUTE
+                <div class="terminal-help" style="display: none;">
+                    PRESS [↑↓] TO SELECT | PRESS [ENTER] TO EXECUTE | OR TYPE COMMANDS BELOW
+                </div>
+
+                <!-- Command Line Input -->
+                <div class="command-line" id="commandLine">
+                    <div class="command-prompt">SYS://{{ username }}@MUSIC_WRAPPED &gt;</div>
+                    <input type="text" class="command-input" id="commandInput" autocomplete="off" placeholder="Type 'help' or 'run total_plays'">
                 </div>
 
                 <div class="terminal-result" id="terminalResult" style="display: none;">
@@ -84,21 +116,33 @@
 // Prepare data for JavaScript
 window.topArtistsData = [
     {% for artist, count in top_artists %}
-    { name: "{{ artist.name }}", count: {{ count }} }{% if not loop.last %},{% endif %}
+    { name: "{{ artist.name|replace('"', '\\"') }}", count: {{ count }} }{% if not loop.last %},{% endif %}
     {% endfor %}
 ];
+if (window.topArtistsData.length === 0) {
+    window.topArtistsData = [{name: "No data", count: 0}];
+}
 
 window.topSongsData = [
     {% for song, artist, count in top_songs %}
-    { name: "{{ song.title }}", extra: "{{ artist.name }}", count: {{ count }} }{% if not loop.last %},{% endif %}
+    { name: "{{ song.title|replace('"', '\\"') }}", extra: "{{ artist.name|replace('"', '\\"') }}", count: {{ count }} }{% if not loop.last %},{% endif %}
     {% endfor %}
 ];
+if (window.topSongsData.length === 0) {
+    window.topSongsData = [{name: "No data", extra: "", count: 0}];
+}
 
 window.topAlbumsData = [
     {% for album, artist, count in top_albums %}
-    { name: "{{ album.title }}", extra: "{{ artist.name }}", count: {{ count }} }{% if not loop.last %},{% endif %}
+    { name: "{{ album.title|replace('"', '\\"') }}", extra: "{{ artist.name|replace('"', '\\"') }}", count: {{ count }} }{% if not loop.last %},{% endif %}
     {% endfor %}
 ];
+if (window.topAlbumsData.length === 0) {
+    window.topAlbumsData = [{name: "No data", extra: "", count: 0}];
+}
+
+// Total minutes
+window.totalMinutes = {{ total_time }};
 
 window.monthlyData = {
     months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -113,9 +157,1024 @@ window.monthlyData = {
         {{ count.value }}{% if not loop.last %},{% endif %}
         {% endfor %}
     ],
-    topMonth: {{ top_month if top_month else 1 }},
-    topMonthCount: {{ top_month_count }}
+    topMonth: {{ top_month|default(1) }},
+    topMonthCount: {{ top_month_count|default(0) }}
 };
 console.log('Monthly Data:', window.monthlyData);
+
+// Boot sequence animation
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, starting boot sequence');
+    const bootSequence = document.getElementById('bootSequence');
+    const mainContent = document.getElementById('mainContent');
+    const interactiveTerminal = document.getElementById('interactiveTerminal');
+    const commandInput = document.getElementById('commandInput');
+    const mainNavbar = document.getElementById('mainNavbar');
+    const username = '{{ username }}';
+    
+    // Hide navbar during boot
+    if (mainNavbar) mainNavbar.style.display = 'none';
+    
+    console.log('bootSequence:', bootSequence);
+    console.log('mainContent:', mainContent);
+    console.log('interactiveTerminal:', interactiveTerminal);
+    
+    // Show main content after boot sequence (5.5 seconds)
+    setTimeout(() => {
+        console.log('Timeout triggered, hiding boot and showing content');
+        if (bootSequence) bootSequence.style.display = 'none';
+        if (mainContent) mainContent.style.display = 'block';
+    }, 5500);
+    
+    // Show terminal and navbar on scroll
+    let terminalShown = false;
+    window.addEventListener('scroll', function() {
+        if (!terminalShown && window.scrollY > 100) {
+            terminalShown = true;
+            const terminalHeader = document.getElementById('terminalHeader');
+            if (interactiveTerminal) {
+                interactiveTerminal.style.display = 'block';
+            }
+            if (terminalHeader) {
+                terminalHeader.style.opacity = '1';
+            }
+            if (mainNavbar) {
+                mainNavbar.style.display = 'block';
+            }
+        }
+    });
+    
+    // Command Line Interface
+    if (commandInput) {
+        const commandMenu = document.getElementById('commandMenu');
+        const terminalResult = document.getElementById('terminalResult');
+        const commandLine = document.getElementById('commandLine');
+        const terminalHistory = document.getElementById('terminalHistory');
+        
+        // Command mappings
+        const commands = {
+            'help': { action: 'showHelp' },
+            'clear': { action: 'clear' },
+            'run total_plays': { index: 0 },
+            'run top_artists': { index: 1 },
+            'run top_songs': { index: 2 },
+            'run top_albums': { index: 3 },
+            'run jam_sessions': { index: 4 },
+            'run mood_analysis': { index: 5 },
+            'run top_genre': { index: 6 },
+            'run monthly_chart': { index: 7 }
+        };
+        
+        commandInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const input = this.value.trim().toLowerCase();
+                const rawInput = this.value.trim();
+                this.value = '';
+                
+                if (!input) return;
+                
+                // Add command to history
+                addToHistory(`SYS://${username}@MUSIC_WRAPPED &gt; ${rawInput}`);
+                
+                const command = commands[input];
+                
+                if (!command) {
+                    addToHistory(`<span style="color: #ff6b6b;">ERROR: Unknown command "${rawInput}". Type "help" for available commands.</span>`);
+                    return;
+                }
+                
+                if (command.action === 'showHelp') {
+                    showHelpInHistory();
+                } else if (command.action === 'clear') {
+                    // Clear terminal history
+                    terminalHistory.innerHTML = '';
+                    document.querySelector('.terminal-instructions').style.display = 'block';
+                } else if (command.index !== undefined) {
+                    // Execute the corresponding query
+                    executeQueryToHistory(command.index);
+                }
+            }
+        });
+        
+        function addToHistory(content) {
+            const entry = document.createElement('div');
+            entry.className = 'history-entry';
+            entry.innerHTML = content;
+            terminalHistory.appendChild(entry);
+            
+            // Hide instructions once commands start
+            document.querySelector('.terminal-instructions').style.display = 'none';
+            
+            // Auto scroll to bottom
+            terminalHistory.scrollTop = terminalHistory.scrollHeight;
+        }
+        
+        function showHelpInHistory() {
+            const helpContent = `
+                <div class="help-output">
+                    <div class="help-section">
+                        <div class="help-header">┌────────────────────────────────────────┐</div>
+                        <div class="help-header">│       AVAILABLE COMMANDS               │</div>
+                        <div class="help-header">├────────────────────────────────────────┤</div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <div class="help-category">QUERY COMMANDS:</div>
+                        <div class="help-item">
+                            <span class="help-command">run total_plays</span>
+                            <span class="help-desc">Total sessions</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-command">run top_artists</span>
+                            <span class="help-desc">Top 5 artists</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-command">run top_songs</span>
+                            <span class="help-desc">Top 5 songs</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-command">run top_albums</span>
+                            <span class="help-desc">Top 5 albums</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-command">run jam_sessions</span>
+                            <span class="help-desc">Music soulmate</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-command">run mood_analysis</span>
+                            <span class="help-desc">Emotional profile</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-command">run top_genre</span>
+                            <span class="help-desc">Sound identity</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-command">run monthly_chart</span>
+                            <span class="help-desc">Yearly activity</span>
+                        </div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <div class="help-category">SYSTEM COMMANDS:</div>
+                        <div class="help-item">
+                            <span class="help-command">help</span>
+                            <span class="help-desc">Show this help</span>
+                        </div>
+                        <div class="help-item">
+                            <span class="help-command">clear</span>
+                            <span class="help-desc">Clear terminal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="help-section">
+                        <div class="help-header">└────────────────────────────────────────┘</div>
+                    </div>
+                </div>
+            `;
+            addToHistory(helpContent);
+        }
+        
+        function executeQueryToHistory(index) {
+            const commandItems = commandMenu.querySelectorAll('.command-item');
+            if (!commandItems[index]) return;
+            
+            const selectedCommand = commandItems[index];
+            const type = selectedCommand.dataset.type;
+            const result = selectedCommand.dataset.result;
+            const label = selectedCommand.dataset.label;
+            const extra = selectedCommand.dataset.extra;
+            const status = selectedCommand.dataset.status || 'QUERY COMPLETE';
+            
+            // Loading sequences for each query
+            const loadingSequences = {
+                0: { // total_plays
+                    module: 'TOTAL_PLAYS',
+                    steps: [
+                        'Locating playback counters…',
+                        'Counting sonic interactions…',
+                        'Finalizing session totals…'
+                    ]
+                },
+                1: { // top_artists
+                    module: 'TOP_ARTISTS',
+                    steps: [
+                        'Accessing playback archive…',
+                        'Ranking artistic influence…',
+                        'Locking dominant creators…'
+                    ]
+                },
+                2: { // top_songs
+                    module: 'TOP_SONGS',
+                    steps: [
+                        'Scanning frequency memory…',
+                        'Detecting repeat triggers…',
+                        'Sorting sonic priorities…'
+                    ]
+                },
+                3: { // top_albums
+                    module: 'TOP_ALBUMS',
+                    steps: [
+                        'Loading long-form playback logs…',
+                        'Analyzing album loyalty…',
+                        'Ranking musical journeys…'
+                    ]
+                },
+                4: { // jam_sessions
+                    module: 'JAM_ENGINE',
+                    steps: [
+                        'Searching collaboration records…',
+                        'Calculating vibe compatibility…',
+                        'Detecting strongest sonic bond…'
+                    ]
+                },
+                5: { // mood_analysis
+                    module: 'MOOD_ANALYSIS',
+                    steps: [
+                        'Scanning emotional frequencies…',
+                        'Mapping listening psychology…',
+                        'Calibrating mood spectrum…'
+                    ]
+                },
+                6: { // top_genre
+                    module: 'GENRE_CORE',
+                    steps: [
+                        'Tracking dominant sound patterns…',
+                        'Identifying sound identity…',
+                        'Locking genre profile…'
+                    ]
+                },
+                7: { // monthly_chart
+                    module: 'MONTHLY_CHART',
+                    steps: [
+                        'Loading annual playback logs…',
+                        'Rendering temporal activity…',
+                        'Finalizing activity graph…'
+                    ]
+                }
+            };
+            
+            const sequence = loadingSequences[index];
+            const processingId = 'processing-' + Date.now();
+            
+            // Add processing container
+            addToHistory(`<div id="${processingId}" class="processing-container">
+                <div class="processing-header">INITIALIZING MODULE::${sequence.module}</div>
+                <div class="processing-steps"></div>
+                <div class="processing-progress">
+                    <div class="progress-label">PROGRESS:</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-percent">0%</div>
+                </div>
+                <div class="processing-cursor">█</div>
+            </div>`);
+            
+            const processingEl = document.getElementById(processingId);
+            const stepsEl = processingEl.querySelector('.processing-steps');
+            const progressFill = processingEl.querySelector('.progress-bar-fill');
+            const progressPercent = processingEl.querySelector('.progress-percent');
+            const cursor = processingEl.querySelector('.processing-cursor');
+            
+            // Animate loading steps
+            let currentStep = 0;
+            const stepDuration = 800;
+            
+            function showNextStep() {
+                if (currentStep < sequence.steps.length) {
+                    const stepText = sequence.steps[currentStep];
+                    const stepEl = document.createElement('div');
+                    stepEl.className = 'processing-step';
+                    stepEl.textContent = stepText;
+                    stepsEl.appendChild(stepEl);
+                    
+                    // Update progress
+                    const progress = Math.round(((currentStep + 1) / sequence.steps.length) * 100);
+                    progressFill.style.width = progress + '%';
+                    progressPercent.textContent = progress + '%';
+                    
+                    currentStep++;
+                    
+                    if (currentStep < sequence.steps.length) {
+                        setTimeout(showNextStep, stepDuration);
+                    } else {
+                        // All steps done, show results
+                        setTimeout(() => {
+                            processingEl.remove();
+                            showResults();
+                        }, 500);
+                    }
+                }
+            }
+            
+            // Start animation
+            setTimeout(showNextStep, 300);
+            
+            function showResults() {
+                let output = '';
+                
+                // Total Plays (index 0)
+                if (index === 0) {
+                    const numPlays = parseInt(result);
+                    const totalMins = window.totalMinutes || 0;
+                    const maxPlays = 150;
+                    const maxMins = 1000;
+                    const barWidth = 25;
+                    
+                    const playFill = Math.min(barWidth, Math.round((numPlays / maxPlays) * barWidth));
+                    const playEmpty = barWidth - playFill;
+                    const playBar = '█'.repeat(playFill) + '-'.repeat(playEmpty);
+                    
+                    const minFill = Math.min(barWidth, Math.round((totalMins / maxMins) * barWidth));
+                    const minEmpty = barWidth - minFill;
+                    const minBar = '█'.repeat(minFill) + '-'.repeat(minEmpty);
+                    
+                    output += `<div class="result-box">
+                        <div class="box-line">${'='.repeat(36)}</div>
+                        <div class="box-line">           TOTAL PLAYBACK</div>
+                        <div class="box-line">${'='.repeat(36)}</div>
+                        <div class="box-line">Plays:   ${numPlays.toString().padStart(3)} [${playBar}]</div>
+                        <div class="box-line">Minutes: ${totalMins.toString().padStart(3)} [${minBar}]</div>
+                    </div>
+                    <div class="result-note">${extra || ''}</div>`;
+                }
+                // Top Artists (index 1)
+                else if (index === 1) {
+                    const listData = window.topArtistsData || [];
+                    
+                    // Calculate diversity index
+                    const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
+                    const mean = totalPlays / listData.length;
+                    const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
+                    const stdDev = Math.sqrt(variance);
+                    const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
+                    const diversityPercent = Math.round(evenness * 100);
+                    const barWidth = 25;
+                    const diversityFill = Math.min(barWidth, Math.round((diversityPercent / 100) * barWidth));
+                    const diversityEmpty = barWidth - diversityFill;
+                    const diversityBar = '█'.repeat(diversityFill) + '-'.repeat(diversityEmpty);
+                    
+                    output += `<div class="result-table">
+                        <div class="table-header-line">RANK | ARTIST                          | PLAYS</div>
+                        <div class="table-divider">──────────────────────────────────────────────────────</div>`;
+                    listData.forEach((item, i) => {
+                        const rank = (i + 1).toString().padStart(2, '0');
+                        const name = item.name.padEnd(30).substring(0, 30);
+                        const plays = item.count.toString().padStart(5);
+                        output += `<div class="table-row"> ${rank}  | ${name} | ${plays}</div>`;
+                    });
+                    output += `</div>`;
+                    output += `<div class="chart-stats">
+                        <div class="stat-line">DIVERSITY INDEX: ${diversityPercent}% [${diversityBar}]</div>
+                    </div>`;
+                }
+                // Top Songs (index 2)
+                else if (index === 2) {
+                    const listData = window.topSongsData || [];
+                    
+                    // Calculate diversity index
+                    const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
+                    const mean = totalPlays / listData.length;
+                    const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
+                    const stdDev = Math.sqrt(variance);
+                    const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
+                    const diversityPercent = Math.round(evenness * 100);
+                    const barWidth = 25;
+                    const diversityFill = Math.min(barWidth, Math.round((diversityPercent / 100) * barWidth));
+                    const diversityEmpty = barWidth - diversityFill;
+                    const diversityBar = '█'.repeat(diversityFill) + '-'.repeat(diversityEmpty);
+                    
+                    output += `<div class="result-table">
+                        <div class="table-header-line">RANK | TRACK                    | ARTIST               | PLAYS</div>
+                        <div class="table-divider">────────────────────────────────────────────────────────────────────</div>`;
+                    listData.forEach((item, i) => {
+                        const rank = (i + 1).toString().padStart(2, '0');
+                        const name = item.name.padEnd(23).substring(0, 23);
+                        const artist = (item.extra || '').padEnd(18).substring(0, 18);
+                        const plays = item.count.toString().padStart(5);
+                        output += `<div class="table-row"> ${rank}  | ${name} | ${artist} | ${plays}</div>`;
+                    });
+                    output += `</div>`;
+                    output += `<div class="chart-stats">
+                        <div class="stat-line">DIVERSITY INDEX: ${diversityPercent}% [${diversityBar}]</div>
+                    </div>`;
+                }
+                // Top Albums (index 3)
+                else if (index === 3) {
+                    const listData = window.topAlbumsData || [];
+                    
+                    // Calculate diversity index
+                    const totalPlays = listData.reduce((sum, item) => sum + item.count, 0);
+                    const mean = totalPlays / listData.length;
+                    const variance = listData.reduce((sum, item) => sum + Math.pow(item.count - mean, 2), 0) / listData.length;
+                    const stdDev = Math.sqrt(variance);
+                    const evenness = mean > 0 ? Math.max(0, 1 - (stdDev / mean)) : 0;
+                    const diversityPercent = Math.round(evenness * 100);
+                    const barWidth = 25;
+                    const diversityFill = Math.min(barWidth, Math.round((diversityPercent / 100) * barWidth));
+                    const diversityEmpty = barWidth - diversityFill;
+                    const diversityBar = '█'.repeat(diversityFill) + '-'.repeat(diversityEmpty);
+                    
+                    output += `<div class="result-table">
+                        <div class="table-header-line">RANK | ALBUM                    | ARTIST               | PLAYS</div>
+                        <div class="table-divider">────────────────────────────────────────────────────────────────────</div>`;
+                    listData.forEach((item, i) => {
+                        const rank = (i + 1).toString().padStart(2, '0');
+                        const name = item.name.padEnd(23).substring(0, 23);
+                        const artist = (item.extra || '').padEnd(18).substring(0, 18);
+                        const plays = item.count.toString().padStart(5);
+                        output += `<div class="table-row"> ${rank}  | ${name} | ${artist} | ${plays}</div>`;
+                    });
+                    output += `</div>`;
+                    output += `<div class="chart-stats">
+                        <div class="stat-line">DIVERSITY INDEX: ${diversityPercent}% [${diversityBar}]</div>
+                    </div>`;
+                }
+                // Jam Sessions (index 4)
+                else if (index === 4) {
+                    if (result === 'NO JAMS DETECTED') {
+                        output += `<div class="result-centered">
+                            <div class="centered-main">This year you jammed in &gt;&gt;&gt; SOLO MODE &lt;&lt;&lt;</div>
+                        </div>
+                        <div class="result-note">${(extra || '').split('|')[0].trim()}</div>`;
+                    } else {
+                        const partnerStr = result.toUpperCase();
+                        output += `<div class="result-centered">
+                            <div class="centered-main">This year you jammed with &gt;&gt;&gt; ${partnerStr} &lt;&lt;&lt;</div>
+                        </div>
+                        <div class="result-note">${(extra || '').split('|')[0].trim()}</div>`;
+                    }
+                }
+                // Mood Analysis (index 5)
+                else if (index === 5) {
+                    const moodStr = result.toUpperCase();
+                    output += `<div class="result-centered">
+                        <div class="centered-main">This year you chose to be &gt;&gt;&gt; ${moodStr} &lt;&lt;&lt;</div>
+                    </div>
+                    <div class="result-note">${(extra || '').toUpperCase()}</div>`;
+                }
+                // Top Genre (index 6)
+                else if (index === 6) {
+                    const genreStr = result.toUpperCase();
+                    output += `<div class="result-centered">
+                        <div class="centered-main">This year you chose your sound to be &gt;&gt;&gt; ${genreStr} &lt;&lt;&lt;</div>
+                    </div>
+                    <div class="result-note">${(extra || '').toUpperCase()}</div>`;
+                }
+                // Monthly Chart (index 7)
+                else if (index === 7) {
+                    const monthlyData = window.monthlyData;
+                    if (monthlyData && monthlyData.data) {
+                        const maxCount = Math.max(...monthlyData.data);
+                        const barWidth = 40;
+                        
+                        // Calculate consistency metrics
+                        const activeMonths = monthlyData.data.filter(count => count >= 5).length;
+                        const consistencyPercent = Math.round((activeMonths / 12) * 100);
+                        
+                        // Calculate longest streak
+                        let currentStreak = 0;
+                        let longestStreak = 0;
+                        let streakStart = -1;
+                        let bestStreakStart = -1;
+                        
+                        monthlyData.data.forEach((count, i) => {
+                            if (count >= 5) {
+                                if (currentStreak === 0) streakStart = i;
+                                currentStreak++;
+                                if (currentStreak > longestStreak) {
+                                    longestStreak = currentStreak;
+                                    bestStreakStart = streakStart;
+                                }
+                            } else {
+                                currentStreak = 0;
+                            }
+                        });
+                        
+                        const streakEnd = bestStreakStart + longestStreak - 1;
+                        const streakText = longestStreak > 0 ? 
+                            `${longestStreak} month${longestStreak > 1 ? 's' : ''} (${monthlyData.months[bestStreakStart]}-${monthlyData.months[streakEnd]})` : 
+                            'None';
+                        
+                        // Generate consistency message
+                        let consistencyMsg = '';
+                        if (consistencyPercent >= 75) {
+                            consistencyMsg = 'You kept the music flowing steadily — your Wrapped is consistent!';
+                        } else if (consistencyPercent >= 50) {
+                            consistencyMsg = 'Solid listening habits — you showed up for the music.';
+                        } else if (consistencyPercent >= 25) {
+                            consistencyMsg = 'Your listening came in waves — you had your moments.';
+                        } else {
+                            consistencyMsg = 'You kept it selective — quality over quantity.';
+                        }
+                        
+                        output += `<div class="result-chart">
+                            <div class="chart-header">MONTH | ACTIVITY</div>
+                            <div class="chart-divider">────────────────────────────────────────────────</div>`;
+                        
+                        monthlyData.months.forEach((month, i) => {
+                            const count = monthlyData.data[i];
+                            const barLength = maxCount > 0 ? Math.round((count / maxCount) * barWidth) : 0;
+                            const bar = '█'.repeat(barLength);
+                            
+                            // Determine trend indicator
+                            let trend = '';
+                            if (i > 0) {
+                                const prevCount = monthlyData.data[i - 1];
+                                if (count > prevCount) {
+                                    trend = ' ↑';
+                                } else if (count < prevCount) {
+                                    trend = ' ↓';
+                                }
+                            }
+                            
+                            output += `<div class="chart-row">${month.padEnd(5)} | ${bar} ${count}${trend}</div>`;
+                        });
+                        
+                        output += `</div>`;
+                        
+                        // Generate consistency bar
+                        const consistencyBarWidth = 25;
+                        const consistencyFill = Math.min(consistencyBarWidth, Math.round((consistencyPercent / 100) * consistencyBarWidth));
+                        const consistencyEmpty = consistencyBarWidth - consistencyFill;
+                        const consistencyBar = '█'.repeat(consistencyFill) + '-'.repeat(consistencyEmpty);
+                        
+                        output += `<div class="chart-stats">
+                            <div class="stat-line">CONSISTENCY: ${consistencyPercent}% [${consistencyBar}]</div>
+                            <div class="stat-line">LONGEST ACTIVE STREAK: ${streakText}</div>
+                        </div>
+                        <div class="result-note">${consistencyMsg}</div>`;
+                    }
+                }
+                
+                addToHistory(output);
+            }
+        }
+    }
+});
 </script>
+
+<style>
+.boot-sequence {
+    font-family: 'VT323', monospace;
+    color: var(--primary-color);
+    font-size: 20px;
+    padding: 60px 20px;
+    min-height: 100vh;
+    background: #0a0a0a;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
+
+.boot-line {
+    opacity: 0;
+    animation: fadeInLine 0.3s forwards;
+    margin: 8px 0;
+}
+
+@keyframes fadeInLine {
+    to {
+        opacity: 1;
+    }
+}
+
+.boot-complete {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.boot-dots::after {
+    content: '';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+.terminal-hint {
+    color: #888;
+    font-size: 14px;
+    margin: 10px 0 20px 0;
+    font-style: italic;
+}
+
+.terminal-instructions {
+    color: var(--primary-color);
+    font-size: 16px;
+    line-height: 1.8;
+    margin: 20px 0;
+    font-family: 'VT323', monospace;
+}
+
+.terminal-instructions p {
+    margin: 5px 0;
+}
+
+.command-line {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: #1a1a1a;
+    border: 1px solid var(--primary-color);
+    font-family: 'VT323', monospace;
+}
+
+.command-prompt {
+    color: var(--primary-color);
+    font-size: 18px;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.command-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    outline: none;
+    caret-color: var(--primary-color);
+}
+
+.command-input::placeholder {
+    color: #555;
+}
+
+.terminal-history {
+    color: var(--primary-color);
+    font-family: 'VT323', monospace;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 20px 0;
+}
+
+.history-entry {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.monthly-chart-result {
+    display: flex;
+    align-items: flex-end;
+    height: 150px;
+    gap: 5px;
+    margin: 20px 0;
+}
+
+.chart-month-inline {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.chart-bar-inline {
+    width: 100%;
+    background: linear-gradient(to top, var(--primary-color), rgba(168, 204, 140, 0.6));
+    border: 1px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bar-count-inline {
+    font-size: 12px;
+    color: #000;
+}
+
+.chart-label-inline {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.help-output {
+    font-family: 'VT323', monospace;
+    color: var(--primary-color);
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.help-section {
+    margin: 15px 0;
+}
+
+.help-header {
+    color: var(--primary-color);
+    font-size: 16px;
+}
+
+.help-category {
+    color: var(--primary-color);
+    font-size: 18px;
+    font-weight: bold;
+    margin: 15px 0 10px 0;
+}
+
+.help-item {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.help-command {
+    color: var(--primary-color);
+    font-weight: bold;
+    display: inline-block;
+    width: 200px;
+}
+
+.help-desc {
+    color: #888;
+}
+
+.processing-container {
+    padding: 20px;
+    margin: 15px 0;
+    font-family: 'VT323', monospace;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.processing-header {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.processing-steps {
+    margin: 15px 0;
+    min-height: 60px;
+}
+
+.processing-step {
+    color: #aaa;
+    font-size: 1rem;
+    margin: 5px 0;
+    padding-left: 20px;
+    animation: fadeInStep 0.3s ease-out;
+}
+
+@keyframes fadeInStep {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.processing-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+    max-width: 100%;
+}
+
+.progress-label {
+    color: var(--primary-color);
+    font-size: 1rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.progress-bar-container {
+    flex: 1;
+    min-width: 0;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--primary-color);
+    transition: width 0.5s ease-out;
+    position: relative;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: scanning 1.5s infinite;
+}
+
+@keyframes scanning {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.progress-percent {
+    color: var(--primary-color);
+    font-size: 1rem;
+    min-width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.processing-cursor {
+    color: var(--primary-color);
+    font-size: 1rem;
+    animation: blinkCursor 1s infinite;
+    margin-top: 10px;
+}
+
+@keyframes blinkCursor {
+    0%, 49% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
+}
+
+.result-meters {
+    display: flex;
+    gap: 30px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.result-meter {
+    flex: 1;
+    min-width: 200px;
+}
+
+.meter-label {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.meter-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(168, 204, 140, 0.1);
+    border: 1px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), rgba(168, 204, 140, 0.6));
+    transition: width 1s ease-out;
+}
+
+.meter-value {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    margin-top: 5px;
+    text-align: right;
+}
+
+/* Result Box Styles */
+.result-box {
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+    line-height: 1.4;
+}
+
+.box-line {
+    color: var(--primary-color);
+    font-size: 1rem;
+    white-space: pre;
+}
+
+.box-line.box-big {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.result-note {
+    color: #aaa;
+    font-size: 0.95rem;
+    margin: 10px 0;
+    padding-left: 20px;
+    line-height: 1.6;
+}
+
+/* Centered Result Styles */
+.result-centered {
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+}
+
+.centered-main {
+    color: var(--primary-color);
+    font-size: 1.05rem;
+    font-weight: normal;
+    margin: 15px 0;
+    line-height: 1.6;
+}
+
+/* Chart Stats Styles */
+.chart-stats {
+    margin: 15px 0 10px 0;
+    font-family: 'Courier New', monospace;
+}
+
+.stat-line {
+    color: var(--primary-color);
+    font-size: 0.95rem;
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+/* Result Table Styles */
+.result-table {
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+}
+
+.table-header-line {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.table-divider {
+    color: var(--primary-color);
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.table-row {
+    color: #ddd;
+    font-size: 1rem;
+    margin: 3px 0;
+    padding: 2px 0;
+    transition: background 0.2s;
+}
+
+.table-row:hover {
+    background: rgba(168, 204, 140, 0.1);
+}
+
+/* Result Chart Styles */
+.result-chart {
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+}
+
+.chart-header {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.chart-divider {
+    color: var(--primary-color);
+    font-size: 1rem;
+    margin: 5px 0 10px 0;
+}
+
+.chart-row {
+    color: #ddd;
+    font-size: 1rem;
+    margin: 2px 0;
+    line-height: 1.6;
+}
+
+.chart-peak {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-top: 15px;
+    font-size: 1.1rem;
+}
+
+</style>
 {% endblock %}

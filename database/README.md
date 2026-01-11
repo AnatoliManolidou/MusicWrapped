@@ -30,9 +30,9 @@ mysql -u root -p < database/users.sql
 
 ---
 
-## Query Examples (From Deliverable 2)
+## Analytical Query Examples
 
-These SQL files demonstrate various database operations and were part of the original assignment:
+These SQL files demonstrate core database operations for music analytics:
 
 ### **query1.sql**
 **Purpose:** Get listening history for a specific user
