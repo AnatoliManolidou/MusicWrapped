@@ -76,12 +76,21 @@
 
 .terminal-result {
     padding: 20px 0;
+    min-height: 300px;
+    position: relative;
 }
 
 .result-executing {
     color: var(--primary-color);
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1.3rem;
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    letter-spacing: 1px;
 }
 
 .dots::after {
@@ -98,14 +107,18 @@
 
 .result-loader {
     color: var(--primary-color);
-    font-size: 1.5rem;
-    margin: 20px 0;
+    font-size: 2rem;
+    text-align: center;
     animation: blink 0.8s infinite;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-.result-line {
-    margin: 15px 0;
-    font-size: 1.1rem;
+.result-output {
+    color: #ddd;
+    animation: fadeIn 0.5s ease-in;
 }
 
 .result-line.success {
@@ -252,4 +265,326 @@
     font-weight: bold;
     font-size: 0.9rem;
     color: #c8ec8c;
+}
+
+/* Enhanced Result Components */
+.status-banner {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.status-divider {
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 0.8rem;
+    margin-bottom: 25px;
+    opacity: 0.7;
+}
+
+.result-main {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 20px 0;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(168, 204, 140, 0.5);
+    line-height: 1.2;
+}
+
+.result-subtitle {
+    font-size: 1.2rem;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.result-flavor {
+    font-size: 1rem;
+    color: #888;
+    text-align: center;
+    margin: 15px 0;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+/* Badge System */
+.result-badges {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 10px 20px;
+    background: rgba(168, 204, 140, 0.15);
+    border: 1px solid var(--primary-color);
+    border-radius: 3px;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(168, 204, 140, 0.2);
+}
+
+/* Progress Meter */
+.result-meter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.meter-label {
+    color: #aaa;
+    font-size: 0.9rem;
+    min-width: 140px;
+}
+
+.meter-bar {
+    flex: 1;
+    height: 20px;
+    background: rgba(168, 204, 140, 0.2);
+    border: 1px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, #c8ec8c 100%);
+    transition: width 1s ease-out;
+    box-shadow: 0 0 10px rgba(168, 204, 140, 0.6);
+}
+
+.meter-value {
+    color: var(--primary-color);
+    font-weight: bold;
+    min-width: 50px;
+    text-align: right;
+}
+
+/* Enhanced List Items */
+.result-list-enhanced {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.list-item-box {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px;
+    gap: 15px;
+    padding: 15px 20px;
+    background: rgba(168, 204, 140, 0.05);
+    border: 1px solid var(--primary-color);
+    border-left: 3px solid var(--primary-color);
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.list-item-box:hover {
+    background: rgba(168, 204, 140, 0.1);
+    box-shadow: 0 0 15px rgba(168, 204, 140, 0.3);
+}
+
+.list-rank {
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.list-item-main {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.list-item-name {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.list-item-artist {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.list-item-count {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: right;
+}
+
+/* Enhanced Result Components */
+.status-banner {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.status-divider {
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 0.8rem;
+    margin-bottom: 25px;
+    opacity: 0.7;
+}
+
+.result-main {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 20px 0;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(168, 204, 140, 0.5);
+    line-height: 1.2;
+}
+
+.result-subtitle {
+    font-size: 1.2rem;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.result-flavor {
+    font-size: 1rem;
+    color: #888;
+    text-align: center;
+    margin: 15px 0;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+/* Badge System */
+.result-badges {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 10px 20px;
+    background: rgba(168, 204, 140, 0.15);
+    border: 1px solid var(--primary-color);
+    border-radius: 3px;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(168, 204, 140, 0.2);
+}
+
+/* Progress Meter */
+.result-meter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.meter-label {
+    color: #aaa;
+    font-size: 0.9rem;
+    min-width: 140px;
+}
+
+.meter-bar {
+    flex: 1;
+    height: 20px;
+    background: rgba(168, 204, 140, 0.2);
+    border: 1px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, #c8ec8c 100%);
+    transition: width 1s ease-out;
+    box-shadow: 0 0 10px rgba(168, 204, 140, 0.6);
+}
+
+.meter-value {
+    color: var(--primary-color);
+    font-weight: bold;
+    min-width: 50px;
+    text-align: right;
+}
+
+/* Enhanced List Items */
+.result-list-enhanced {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.list-item-box {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px;
+    gap: 15px;
+    padding: 15px 20px;
+    background: rgba(168, 204, 140, 0.05);
+    border: 1px solid var(--primary-color);
+    border-left: 3px solid var(--primary-color);
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.list-item-box:hover {
+    background: rgba(168, 204, 140, 0.1);
+    box-shadow: 0 0 15px rgba(168, 204, 140, 0.3);
+}
+
+.list-rank {
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.list-item-main {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.list-item-name {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.list-item-artist {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.list-item-count {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: right;
 }

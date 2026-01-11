@@ -21,38 +21,38 @@
                 <span>═══════════════════════════════════════════════════════</span>
             </div>
             <div class="terminal-content">
-                <div class="terminal-title">AVAILABLE QUERIES:</div>
+                <div class="terminal-title" id="terminalTitle">AVAILABLE QUERIES:</div>
                 
                 <div class="command-menu" id="commandMenu">
-                    <div class="command-item" data-index="0" data-result="{{ total_plays }}" data-label="LISTENING SESSIONS">
+                    <div class="command-item" data-index="0" data-result="{{ total_plays }}" data-label="TOTAL LISTENING SESSIONS" data-status="PLAYBACK DATA RETRIEVED">
                         <span class="prompt">&gt;</span> QUERY TOTAL_PLAYS --year={{ year }}
                     </div>
                     
-                    <div class="command-item" data-index="1" data-type="list" data-label="TOP 5 ARTISTS">
+                    <div class="command-item" data-index="1" data-type="list" data-label="TOP 5 ARTISTS" data-status="TOP ARTISTS COMPILED">
                         <span class="prompt">&gt;</span> QUERY TOP_ARTISTS --limit=5 --year={{ year }}
                     </div>
                     
-                    <div class="command-item" data-index="2" data-type="list" data-label="TOP 5 SONGS">
+                    <div class="command-item" data-index="2" data-type="list" data-label="TOP 5 SONGS" data-status="TOP TRACKS IDENTIFIED">
                         <span class="prompt">&gt;</span> QUERY TOP_SONGS --limit=5 --year={{ year }}
                     </div>
                     
-                    <div class="command-item" data-index="3" data-type="list" data-label="TOP 5 ALBUMS">
+                    <div class="command-item" data-index="3" data-type="list" data-label="TOP 5 ALBUMS" data-status="ALBUM ANALYSIS COMPLETE">
                         <span class="prompt">&gt;</span> QUERY TOP_ALBUMS --limit=5 --year={{ year }}
                     </div>
                     
-                    <div class="command-item" data-index="4" data-result="{% if jam_count > 0 %}{{ top_jam_partner }}{% else %}Looks like you kept it solo this year — your jam era is still loading.{% endif %}" data-label="{% if jam_count > 0 %}YOUR MUSIC SOULMATE{% else %}JAM SESSIONS{% endif %}" data-extra="{% if jam_count > 0 %}Meet your ultimate listening buddy — your music soulmate. | OUT OF {{ jam_count }} SESSIONS | DURATION: {{ top_jam_duration }} MINUTES{% endif %}">
+                    <div class="command-item" data-index="4" data-result="{% if jam_count > 0 %}{{ top_jam_partner }}{% else %}NO JAMS DETECTED{% endif %}" data-label="{% if jam_count > 0 %}Your Music Soulmate{% else %}JAM SESSIONS{% endif %}" data-extra="{% if jam_count > 0 %}Meet your ultimate listening buddy — your music soulmate. | {{ jam_count }} SESSIONS | {{ top_jam_duration }} MINUTES{% else %}Looks like you kept it solo this year — your jam era is still loading.{% endif %}" data-status="{% if jam_count > 0 %}MATCH FOUND{% else %}NO MATCH DETECTED{% endif %}">
                         <span class="prompt">&gt;</span> QUERY JAM_SESSIONS --highlight --year={{ year }}
                     </div>
                     
-                    <div class="command-item" data-index="5" data-result="{{ top_mood }}" data-label="YOUR MOOD" data-extra="{% if top_mood == 'Happy' %}Pure good vibes — your year was powered by smiles.{% elif top_mood == 'Melancholic' %}A beautiful kind of sad — emotional, thoughtful, and deep.{% elif top_mood == 'Energetic' %}Fast beats, big moves — you were always in motion.{% elif top_mood == 'Dark' %}Moody, mysterious, and a little rebellious.{% elif top_mood == 'Calm' %}Soft sounds, quiet moments — your comfort zone.{% elif top_mood == 'Focused' %}Locked in. Tuned out. You were in your zone.{% elif top_mood == 'Relaxing' %}Easygoing tracks for slow, peaceful days.{% elif top_mood == 'Dramatic' %}Every song was a main-character moment.{% elif top_mood == 'Aggressive' %}Loud, bold, and unapologetic.{% elif top_mood == 'Cool' %}Effortlessly smooth — your playlist had style.{% endif %}">
+                    <div class="command-item" data-index="5" data-result="{{ top_mood }}" data-label="Your 2025 Vibe" data-extra="{% if top_mood == 'Happy' %}Pure good vibes — your year was powered by smiles.{% elif top_mood == 'Melancholic' %}A beautiful kind of sad — emotional, thoughtful, and deep.{% elif top_mood == 'Energetic' %}Fast beats, big moves — you were always in motion.{% elif top_mood == 'Dark' %}Moody, mysterious, and a little rebellious.{% elif top_mood == 'Calm' %}Soft sounds, quiet moments — your comfort zone.{% elif top_mood == 'Focused' %}Locked in. Tuned out. You were in your zone.{% elif top_mood == 'Relaxing' %}Easygoing tracks for slow, peaceful days.{% elif top_mood == 'Dramatic' %}Every song was a main-character moment.{% elif top_mood == 'Aggressive' %}Loud, bold, and unapologetic.{% elif top_mood == 'Cool' %}Effortlessly smooth — your playlist had style.{% endif %}" data-status="EMOTIONAL PROFILE DETECTED">
                         <span class="prompt">&gt;</span> QUERY MOOD_ANALYSIS --year={{ year }}
                     </div>
                     
-                    <div class="command-item" data-index="6" data-result="{{ favorite_genre }}" data-label="TOP GENRE" data-extra="{% if favorite_genre == 'Pop' %}Catchy hooks and big choruses — your soundtrack was everywhere.{% elif favorite_genre == 'Rock' %}Real guitars, real attitude.{% elif favorite_genre == 'Indie' %}You like your music rare and underrated.{% elif favorite_genre == 'Rap' %}Bars, beats, and pure confidence.{% elif favorite_genre == 'Metal' %}Loud, heavy, and fearless.{% endif %}">
+                    <div class="command-item" data-index="6" data-result="{{ favorite_genre }}" data-label="Your Sound Identity" data-extra="{% if favorite_genre == 'Pop' %}Catchy hooks and big choruses — your soundtrack was everywhere.{% elif favorite_genre == 'Rock' %}Real guitars, real attitude.{% elif favorite_genre == 'Indie' %}You like your music rare and underrated.{% elif favorite_genre == 'Rap' %}Bars, beats, and pure confidence.{% elif favorite_genre == 'Metal' %}Loud, heavy, and fearless.{% endif %}" data-status="GENRE DOMINANCE CONFIRMED">
                         <span class="prompt">&gt;</span> QUERY TOP_GENRE --year={{ year }}
                     </div>
                     
-                    <div class="command-item" data-index="7" data-type="chart" data-label="YOUR YEAR IN MUSIC">
+                    <div class="command-item" data-index="7" data-type="chart" data-label="YOUR YEAR IN MUSIC" data-status="YEARLY ACTIVITY MAPPED">
                         <span class="prompt">&gt;</span> QUERY MONTHLY_CHART --visual --year={{ year }}
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="terminal-result" id="terminalResult" style="display: none;">
-                    <div class="result-executing">
+                    <div class="result-executing" id="executingMessage">
                         EXECUTING QUERY<span class="dots"></span>
                     </div>
                     <div class="result-loader">█</div>
