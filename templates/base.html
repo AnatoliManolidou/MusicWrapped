@@ -11,6 +11,7 @@
 </head>
 <body>
     <!-- Navigation Bar -->
+    {% if session.user_id %}
     <nav class="navbar" id="mainNavbar">
         <div class="dos-header">
             <div class="dos-header-line">
@@ -22,13 +23,13 @@
                     <span>♪ MUSIC_WRAPPED.SYS v1.0</span>
                 </div>
                 
-                {% if session.user_id %}
                 <div class="nav-menu">
                     {% if session.role == 'Content_Manager' %}
                         <a href="{{ url_for('content_manager.index') }}">[DASHBOARD]</a>
                         <a href="{{ url_for('content_manager.artists') }}">[ARTISTS]</a>
-                        <a href="{{ url_for('content_manager.albums') }}">[ALBUMS]</a>
-                        <a href="{{ url_for('content_manager.songs') }}">[SONGS]</a>
+                        {# Albums and songs management coming soon #}
+                        {# <a href="{{ url_for('content_manager.albums') }}">[ALBUMS]</a> #}
+                        {# <a href="{{ url_for('content_manager.songs') }}">[SONGS]</a> #}
                     {% else %}
                         <a href="{{ url_for('dashboard.home') }}">[HOME]</a>
                         <a href="{{ url_for('dashboard.history') }}">[HISTORY]</a>
@@ -38,7 +39,6 @@
                     <span class="user-display">USER: {{ session.username }}</span>
                     <a href="{{ url_for('auth.logout') }}" class="logout-btn">[EXIT]</a>
                 </div>
-                {% endif %}
                 <span class="dos-border">║</span>
             </div>
             <div class="dos-header-line">
@@ -46,6 +46,7 @@
             </div>
         </div>
     </nav>
+    {% endif %}
 
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}

@@ -3,186 +3,71 @@
 {% block title %}Manage Artists - Music Wrapped{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="page-header">
-        <div>
-            <h1><i class="fas fa-microphone"></i> Manage Artists</h1>
-            <p>Add, edit, and delete artists from the database</p>
+<div class="dashboard-container">
+    <div class="terminal-wrapper">
+        <div class="terminal-header">
+            <span>═══════════════════════════════════════════════════════</span>
         </div>
-        <a href="{{ url_for('content_manager.new_artist') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Add New Artist
-        </a>
-    </div>
+        <div class="terminal-content">
+            <div class="terminal-title">ARTIST MANAGEMENT</div>
+            <div class="terminal-instructions">
+                <p>&gt; Total Artists in Database: {{ artists|length }}</p>
+                <p>&gt;</p>
+            </div>
 
-    <div class="content-table-container">
-        <table class="content-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Country</th>
-                    <th>Formation Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+            <!-- Add Artist Button -->
+            <div class="terminal-section">
+                <a href="{{ url_for('content_manager.new_artist') }}" class="terminal-menu-item" style="display: inline-block; margin-bottom: 20px;">
+                    <span class="prompt">[+]</span> ADD NEW ARTIST
+                </a>
+            </div>
+
+            <!-- Artists Table -->
+            <div class="result-table">
+                <div class="table-header-line">ID  | NAME                          | TYPE    | COUNTRY   | FORMED     | STATUS | ACTIONS</div>
+                <div class="table-divider">────────────────────────────────────────────────────────────────────────────────────────────</div>
                 {% for artist in artists %}
-                <tr>
-                    <td>{{ artist.artist_id }}</td>
-                    <td><strong>{{ artist.name }}</strong></td>
-                    <td>
-                        <span class="badge badge-{{ 'primary' if artist.artist_type == 'Solo' else 'info' }}">
-                            {{ artist.artist_type }}
-                        </span>
-                    </td>
-                    <td>{{ artist.country }}</td>
-                    <td>{{ artist.formation_date.strftime('%Y-%m-%d') }}</td>
-                    <td>
-                        <span class="badge badge-{{ 'success' if artist.active_status else 'secondary' }}">
-                            {{ 'Active' if artist.active_status else 'Inactive' }}
-                        </span>
-                    </td>
-                    <td class="actions">
-                        <a href="{{ url_for('content_manager.edit_artist', artist_id=artist.artist_id) }}" class="btn-action btn-edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form method="POST" action="{{ url_for('content_manager.delete_artist', artist_id=artist.artist_id) }}" style="display: inline;" onsubmit="return confirmDelete('{{ artist.name }}')">
-                            <button type="submit" class="btn-action btn-delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+                <div class="table-row">
+                    {{ '%2d'|format(artist.artist_id) }}  | {{ '%-28s'|format(artist.name|truncate(28, True, '')) }} | {{ '%-7s'|format(artist.artist_type) }} | {{ '%-9s'|format(artist.country) }} | {{ artist.formation_date.strftime('%Y') }}       | {{ '%-6s'|format('ACTIVE' if artist.active_status else 'INACTV') }} | 
+                    <a href="{{ url_for('content_manager.edit_artist', artist_id=artist.artist_id) }}" style="color: var(--primary-color);">[EDIT]</a>
+                    <a href="#" onclick="deleteArtist({{ artist.artist_id }}, '{{ artist.name }}'); return false;" style="color: #ff6b6b;">[DEL]</a>
+                </div>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
 
-        <!-- Pagination -->
-        {% if pagination.pages > 1 %}
-        <div class="pagination">
-            {% if pagination.has_prev %}
-                <a href="?page={{ pagination.prev_num }}" class="btn btn-small">
-                    <i class="fas fa-arrow-left"></i> Previous
-                </a>
-            {% endif %}
-            
-            <span class="page-info">
-                Page {{ pagination.page }} of {{ pagination.pages }}
-            </span>
-            
-            {% if pagination.has_next %}
-                <a href="?page={{ pagination.next_num }}" class="btn btn-small">
-                    Next <i class="fas fa-arrow-right"></i>
-                </a>
+            <!-- Pagination -->
+            {% if pagination.pages > 1 %}
+            <div class="terminal-section">
+                <div class="terminal-pagination" style="text-align: center; margin: 20px 0;">
+                    {% if pagination.has_prev %}
+                        <a href="?page={{ pagination.prev_num }}" style="color: var(--primary-color); margin-right: 20px;">[&lt;&lt; PREV]</a>
+                    {% else %}
+                        <span style="color: #555; margin-right: 20px;">[&lt;&lt; PREV]</span>
+                    {% endif %}
+                    
+                    <span style="margin: 0 20px;">PAGE {{ pagination.page }} OF {{ pagination.pages }}</span>
+                    
+                    {% if pagination.has_next %}
+                        <a href="?page={{ pagination.next_num }}" style="color: var(--primary-color); margin-left: 20px;">[NEXT &gt;&gt;]</a>
+                    {% else %}
+                        <span style="color: #555; margin-left: 20px;">[NEXT &gt;&gt;]</span>
+                    {% endif %}
+                </div>
+            </div>
             {% endif %}
         </div>
-        {% endif %}
     </div>
 </div>
 
-<style>
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.content-table-container {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 20px;
-    overflow-x: auto;
-}
-
-.content-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.content-table thead {
-    background-color: var(--bg-color);
-}
-
-.content-table th {
-    padding: 15px;
-    text-align: left;
-    font-weight: 600;
-    border-bottom: 2px solid var(--hover-bg);
-}
-
-.content-table td {
-    padding: 15px;
-    border-bottom: 1px solid var(--hover-bg);
-}
-
-.content-table tbody tr:hover {
-    background-color: var(--hover-bg);
-}
-
-.badge {
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.badge-primary {
-    background-color: rgba(29, 185, 84, 0.2);
-    color: var(--primary-color);
-}
-
-.badge-info {
-    background-color: rgba(59, 130, 246, 0.2);
-    color: var(--info-color);
-}
-
-.badge-success {
-    background-color: rgba(29, 185, 84, 0.2);
-    color: var(--success-color);
-}
-
-.badge-secondary {
-    background-color: rgba(128, 128, 128, 0.2);
-    color: #999;
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-}
-
-.btn-action {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s;
-    color: #fff;
-}
-
-.btn-edit {
-    background-color: var(--info-color);
-}
-
-.btn-edit:hover {
-    background-color: #2563eb;
-}
-
-.btn-delete {
-    background-color: var(--error-color);
-}
-
-.btn-delete:hover {
-    background-color: #c41e2f;
-}
-</style>
-
 <script>
-function confirmDelete(artistName) {
-    return confirm(`Are you sure you want to delete "${artistName}"?\n\nThis will also delete all their albums and songs. This action cannot be undone.`);
+function deleteArtist(artistId, artistName) {
+    if (confirm(`Are you sure you want to delete "${artistName}"?\n\nThis will also delete all their albums and songs. This action cannot be undone.`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/content-manager/artists/${artistId}/delete`;
+        document.body.appendChild(form);
+        form.submit();
+    }
 }
 </script>
 {% endblock %}

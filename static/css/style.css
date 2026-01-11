@@ -2596,6 +2596,45 @@ tbody td a:hover {
     color: var(--accent-bright);
 }
 
+/* Terminal Menu Items for Content Manager */
+.terminal-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.terminal-menu-item {
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+    color: var(--primary-color);
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s;
+}
+
+.terminal-menu-item:hover {
+    background-color: var(--primary-color);
+    color: #0a0a0a;
+    transform: translateX(5px);
+}
+
+.terminal-section {
+    margin: 30px 0;
+}
+
+.section-header {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: var(--accent-bright);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--primary-color);
+}
+
 /* Navigation Prompt */
 .nav-prompt {
     text-align: center;
@@ -2610,3 +2649,4 @@ tbody td a:hover {
     color: var(--accent-bright);
     animation: blink 1.5s infinite;
 }
+

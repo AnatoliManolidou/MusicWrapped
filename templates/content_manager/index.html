@@ -3,99 +3,64 @@
 {% block title %}Content Manager - Music Wrapped{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="page-header">
-        <h1><i class="fas fa-dashboard"></i> Content Manager Dashboard</h1>
-        <p>Manage artists, albums, and songs in the Music Wrapped database</p>
-    </div>
-
-    <!-- Overview Stats -->
-    <div class="stats-grid">
-        <div class="stat-card primary">
-            <div class="stat-icon">
-                <i class="fas fa-microphone"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ total_artists }}</h3>
-                <p>Total Artists</p>
-            </div>
-            <a href="{{ url_for('content_manager.artists') }}" class="stat-link">Manage <i class="fas fa-arrow-right"></i></a>
+<div class="dashboard-container">
+    <div class="terminal-wrapper">
+        <div class="terminal-header">
+            <span>═══════════════════════════════════════════════════════</span>
         </div>
+        <div class="terminal-content">
+            <div class="terminal-title">CONTENT MANAGEMENT SYSTEM v1.0</div>
+            <div class="terminal-instructions">
+                <p>&gt; Database management interface for Music Wrapped.</p>
+                <p>&gt; Manage artists, albums, and songs in the system.</p>
+                <p>&gt;</p>
+            </div>
 
-        <div class="stat-card success">
-            <div class="stat-icon">
-                <i class="fas fa-record-vinyl"></i>
+            <!-- Database Statistics -->
+            <div class="result-box" style="margin: 30px 0;">
+                <div class="box-line">════════════════════════════════════</div>
+                <div class="box-line">      DATABASE STATISTICS</div>
+                <div class="box-line">════════════════════════════════════</div>
+                <div class="box-line">ARTISTS:  {{ '%3d'|format(total_artists) }}</div>
+                <div class="box-line">ALBUMS:   {{ '%3d'|format(total_albums) }}</div>
+                <div class="box-line">SONGS:    {{ '%3d'|format(total_songs) }}</div>
             </div>
-            <div class="stat-content">
-                <h3>{{ total_albums }}</h3>
-                <p>Total Albums</p>
-            </div>
-            <a href="{{ url_for('content_manager.albums') }}" class="stat-link">Manage <i class="fas fa-arrow-right"></i></a>
-        </div>
 
-        <div class="stat-card info">
-            <div class="stat-icon">
-                <i class="fas fa-music"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ total_songs }}</h3>
-                <p>Total Songs</p>
-            </div>
-            <a href="{{ url_for('content_manager.songs') }}" class="stat-link">Manage <i class="fas fa-arrow-right"></i></a>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="content-sections">
-        <div class="content-section">
-            <h2><i class="fas fa-plus-circle"></i> Quick Actions</h2>
-            <div class="action-buttons">
-                <a href="{{ url_for('content_manager.new_artist') }}" class="btn btn-primary">
-                    <i class="fas fa-microphone"></i> Add New Artist
-                </a>
-                <a href="{{ url_for('content_manager.new_album') }}" class="btn btn-success">
-                    <i class="fas fa-record-vinyl"></i> Add New Album
-                </a>
-                <a href="{{ url_for('content_manager.new_song') }}" class="btn btn-info">
-                    <i class="fas fa-music"></i> Add New Song
-                </a>
-            </div>
-        </div>
-
-        <!-- Recent Artists -->
-        <div class="content-section">
-            <h2><i class="fas fa-history"></i> Recent Artists</h2>
-            <div class="recent-list">
-                {% for artist in recent_artists %}
-                <div class="recent-item">
-                    <div class="recent-info">
-                        <strong>{{ artist.name }}</strong>
-                        <span class="badge">{{ artist.artist_type }}</span>
-                    </div>
-                    <a href="{{ url_for('content_manager.edit_artist', artist_id=artist.artist_id) }}" class="btn-small">
-                        <i class="fas fa-edit"></i> Edit
+            <!-- Quick Actions -->
+            <div class="terminal-section">
+                <div class="section-header">&gt;&gt; QUICK ACTIONS</div>
+                <div class="terminal-menu">
+                    <a href="{{ url_for('content_manager.new_artist') }}" class="terminal-menu-item">
+                        <span class="prompt">[+]</span> ADD NEW ARTIST
                     </a>
+                    <!-- Album and song management coming soon -->
                 </div>
-                {% endfor %}
             </div>
-        </div>
 
-        <!-- Recent Songs -->
-        <div class="content-section">
-            <h2><i class="fas fa-history"></i> Recent Songs</h2>
-            <div class="recent-list">
-                {% for song in recent_songs %}
-                <div class="recent-item">
-                    <div class="recent-info">
-                        <strong>{{ song.title }}</strong>
-                        <span class="badge">{{ song.genre }}</span>
-                    </div>
-                    <a href="{{ url_for('content_manager.edit_song', song_id=song.song_id) }}" class="btn-small">
-                        <i class="fas fa-edit"></i> Edit
+            <!-- Management Options -->
+            <div class="terminal-section">
+                <div class="section-header">&gt;&gt; MANAGE DATABASE</div>
+                <div class="terminal-menu">
+                    <a href="{{ url_for('content_manager.artists') }}" class="terminal-menu-item">
+                        <span class="prompt">&gt;</span> MANAGE ARTISTS ({{ total_artists }})
                     </a>
+                    <!-- Albums and songs management coming soon -->
                 </div>
-                {% endfor %}
             </div>
+
+            <!-- Recent Artists -->
+            {% if recent_artists %}
+            <div class="terminal-section">
+                <div class="section-header">&gt;&gt; RECENTLY ADDED ARTISTS</div>
+                <div class="result-table">
+                    <div class="table-header-line">NAME                          | TYPE    | COUNTRY</div>
+                    <div class="table-divider">──────────────────────────────────────────────────────</div>
+                    {% for artist in recent_artists %}
+                    <div class="table-row">{{ '%-28s'|format(artist.name|truncate(28, True, '')) }} | {{ '%-7s'|format(artist.artist_type) }} | {{ artist.country }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
