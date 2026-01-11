@@ -2,7 +2,7 @@
 
 A Flask web application with a unique DOS/terminal aesthetic that transforms a comprehensive music listening database into an interactive "Wrapped" experience. Built on a MySQL database with 14 tables tracking users, artists, albums, songs, and listening history.
 
-## 🎵 Project Overview
+##  Project Overview
 
 Music Wrapped provides two distinct experiences:
 - **End Users:** Interactive terminal-based "Wrapped 2025" statistics with 8 analytical queries
@@ -54,7 +54,7 @@ MusicWrapped/
         └── main.js            # JavaScript utilities
 ```
 
-## ✨ Features
+##  Features
 
 ### End User Features
 
@@ -113,7 +113,7 @@ MusicWrapped/
 
 ---
 
-## 🚀 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -181,11 +181,6 @@ DB_NAME=musicwrappeddatabase
 
 Replace `your_mysql_password` with your actual MySQL root password.
 
-**Important Notes:**
-- ✅ The `.env` file is in `.gitignore` - your password won't be uploaded to GitHub
-- ✅ See [`.env.example`](.env.example) for a template
-- ✅ See [SETUP_PASSWORD.md](SETUP_PASSWORD.md) for detailed instructions
-- ⚠️ The app will NOT run without a `.env` file!
 
 ### Step 7: Run the Application
 
@@ -199,15 +194,14 @@ python app.py
 
 The application will start on `http://localhost:5000`
 
-## 🎮 Usage
+##  Usage
 
 ### For End Users
 
 1. Navigate to `http://localhost:5000`
 2. Login with test credentials:
-   - **Username:** `pierre_frt`
-   - **Password:** `Pierre@33`
-   - **User Type:** End User
+   - **Username:** `vinylcollector`
+   - **Password:** `password123`
 3. Experience the boot sequence → hero section → interactive terminal
 4. Try commands:
    - Type `help` to see all available commands
@@ -220,27 +214,26 @@ The application will start on `http://localhost:5000`
 
 1. Navigate to `http://localhost:5000`
 2. Login with manager credentials:
-   - **Username:** `content_admin` (create or use existing)
-   - **Password:** Your password
-   - **User Type:** Content Manager
+   - **Username:** `maria_bel` 
+   - **Password:** `Maria_It3 `
 3. Access management dashboard
-4. Add/Edit/Delete artists, albums, songs
+4. Add/Edit/Delete artists
 
 ---
 
-## 👥 User Roles
+##  User Roles
 
 The application supports five user roles defined in the database:
 
 - **End_User:** View Wrapped statistics, history, explore songs/artists
-- **Content_Manager:** Full CRUD operations on artists, albums, songs
-- **Data_Analyst:** Read-only access to all data
+- **Content_Manager:** Full CRUD operations on artists  albums and songs for future enhancement
+- **Data_Analyst:** Read-only access to all data (future enhancement)
 - **Artist:** Artist-specific statistics (future enhancement)
 - **Administrator:** Full system access (future enhancement)
 
 ---
 
-## 📊 Database Schema
+##  Database Schema
 
 The application uses 14 interconnected tables:
 
@@ -266,7 +259,7 @@ The application uses 14 interconnected tables:
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 **Backend:**
 - Flask 3.0.0 (Python web framework)
@@ -290,51 +283,7 @@ The application uses 14 interconnected tables:
 
 ---
 
-## 🎨 Design Philosophy
-
-**DOS/Terminal Aesthetic:**
-- Inspired by classic command-line interfaces
-- Box-drawing characters for borders
-- Monospace typography throughout
-- Command-line interaction paradigm
-- Retro green-on-black color scheme
-
-**User Experience:**
-- Progressive revelation (boot → hero → terminal)
-- Interactive feedback (loading animations, processing steps)
-- Consistent visual language across all pages
-- Responsive design within terminal constraints
-
----
-
-## 📸 Screenshots & Features
-
-### Boot Sequence
-- Full-screen black background
-- Left-aligned green text
-- 7-stage animated boot process
-- "SYSTEM READY" confirmation
-
-### Hero Section
-- "> LOADING_USER_DATA.exe" prompt
-- Large title display
-- Total minutes statistic
-- Scroll prompt with bounce animation
-
-### Interactive Terminal
-- DOS-style header (╔═══╗)
-- Command history scrolling
-- Real-time query execution
-- Multiple result formats:
-  - Tables for rankings
-  - Box displays for stats
-  - Centered text for moods/genres
-  - Bar charts for monthly data
-  - Progress bars for percentages
-
----
-
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### "Database password not found!" Error
 
@@ -367,7 +316,7 @@ pip install -r requirements.txt
 
 ---
 
-## 📚 Documentation
+##  Documentation
 
 - **[README.md](README.md)** - This file (overview and setup)
 - **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)** - Complete project architecture and design decisions
@@ -378,7 +327,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🎯 Project Highlights
+## Project Highlights
 
 ### Database Foundation
 ✅ 14 interconnected MySQL tables with complete relationships
@@ -408,28 +357,13 @@ See [DATA_ADDITIONS.md](DATA_ADDITIONS.md) for complete details on:
 
 ---
 
-## 🚀 Future Enhancements
-
-Possible improvements:
-- Password hashing with bcrypt
-- User registration system
-- Chart.js for data visualization
-- Playlist management interface
-- Social features (friends' wrapped, sharing)
-- Music recommendations engine
-- PDF export for wrapped
-- RESTful API endpoints
-- Mobile responsive enhancements
-
----
-
-## 📄 License
+##  License
 
 This project is created for educational purposes as part of a database systems course.
 
 ---
 
-## 🤝 Project Architecture
+##  Project Architecture
 
 **Database Foundation:**  
 MySQL database with 14 interconnected tables tracking users, artists, albums, songs, playlists, and listening history. Enhanced during development with additional artists and albums to support comprehensive analytics.
@@ -441,6 +375,3 @@ Flask framework with blueprint architecture, SQLAlchemy ORM, and Jinja2 templati
 Retro computing aesthetic meets modern web functionality. Progressive revelation, interactive feedback, and consistent visual language throughout.
 
 ---
-
-**Fonts:** VT323 (Google Fonts), Courier Prime  
-**Created for:** Database Systems Course - Interactive Music Analytics Platform
