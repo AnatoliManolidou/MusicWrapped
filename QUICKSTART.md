@@ -2,13 +2,27 @@
 
 ### 1. Update Database Password
 
-Open `config.py` and change line 13:
+**Option A: Using .env file (Recommended)**
 
-```python
-DB_PASSWORD = os.environ.get('DB_PASSWORD') or 'YOUR_MYSQL_PASSWORD_HERE'
+Create a `.env` file in the MusicWrapped directory with:
+
+```
+DB_PASSWORD=your_mysql_password_here
 ```
 
-Replace `YOUR_MYSQL_PASSWORD_HERE` with your actual MySQL root password.
+**Option B: Hardcode in config.py**
+
+Open `config.py` and change line 19:
+
+```python
+DB_PASSWORD = os.environ.get('DB_PASSWORD')  # Must be set in .env file
+```
+
+to:
+
+```python
+DB_PASSWORD = os.environ.get('DB_PASSWORD') or 'your_mysql_password_here'
+```
 
 ### 2. Run Setup Script (Optional)
 
