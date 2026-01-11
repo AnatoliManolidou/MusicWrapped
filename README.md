@@ -9,12 +9,11 @@ Music Wrapped provides two distinct experiences:
 - **Content Managers:** Full CRUD interface for managing artists, albums, and songs
 
 **Key Features:**
-- Retro DOS/terminal aesthetic with sage green (#A8CC8C) on black
 - Interactive command-line interface with boot sequence
 - Comprehensive music analytics (top songs, artists, albums, moods, genres)
 - Monthly listening charts with trend indicators (↑↓)
 - Diversity index and consistency metrics
-- Role-based access control (5 user roles)
+- Role-based access control (2 user roles out of 5 were implemented)
 
 **Database Foundation:**
 - 14 interconnected tables
