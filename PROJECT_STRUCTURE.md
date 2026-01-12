@@ -71,7 +71,7 @@ The MySQL database consists of 14 interconnected tables:
 - **Album Types:** Studio, Single, Live, EP, Soundtrack
 - **Device Types:** Mobile, Desktop, Tablet, Smart TV, Web Player,
 - **Artist Types:** Solo, Band
-- **User Roles:** End_User, Content_Manager, Data_Analyst, Artist, Administrator
+- **User Roles:** End_User, Content_Manager (Data_Analyst, Artist, Administrator for feature update)
 
 ---
 
@@ -137,9 +137,6 @@ The MySQL database consists of 14 interconnected tables:
   - Edit artist (update)
   - Delete artist (cascade handling)
   - List all artists
-- **Album management** (similar structure)
-- **Song management** with artist/album relationships
-- Form validation and error handling
 
 **d) `routes/artists.py` **
 - Artist detail page with:
@@ -147,7 +144,6 @@ The MySQL database consists of 14 interconnected tables:
   - Top songs by this artist
   - Album discography
   - User's listen count for this artist
-  - Follow/unfollow functionality
   - Monthly listening charts (user + overall)
 
 **e) `routes/songs.py` **
@@ -158,7 +154,6 @@ The MySQL database consists of 14 interconnected tables:
   - Artist and album information
   - User's play count vs global play count
   - User's rank for this song
-  - Like/unlike functionality
   - Monthly listening charts (user + overall)
 
 ### Frontend Layer
@@ -655,47 +650,3 @@ MusicWrapped/
 - timestamp_end (DATETIME)
 
 ---
-
-## Project Development Summary
-
-### Database Foundation (Preserved & Enhanced)
-✅ All 14 interconnected tables maintained
-✅ Database schema and relationships intact
-✅ Enums and constraints preserved
-✅ 6 analytical SQL queries from foundation preserved
-✅ **Added 6 artists** (Depeche Mode, Sade, Interpol, Radiohead, Massive Attack, Tame Impala)
-✅ **Added 6 albums** (Violator, Diamond Life, Turn On the Bright Lights, OK Computer, Mezzanine, Deadbeat)
-✅ **Added 11 songs** from new artists
-✅ **Expanded to 10 users** across 5 roles
-
-### Web Application Development
-✅ Flask web framework with blueprint architecture
-✅ SQLAlchemy ORM for database operations
-✅ 5 route modules with 20+ routes
-✅ 11 HTML templates with Jinja2
-✅ 3200+ lines of custom CSS
-✅ Interactive terminal interface with boot sequence
-✅ 8 analytical queries for Wrapped experience
-✅ Role-based authentication system
-✅ Content management CRUD operations
-✅ Pagination, charts, statistics
-✅ Diversity index and consistency metrics
-✅ Trend indicators and progress bars
-✅ Comprehensive documentation
-
-**Total Project Stats:**
-- 14 database tables (foundation + enhancements)
-- 14 artists from 8 countries
-- 14 albums across 5 genres
-- 21 songs with full metadata
-- 10 users across 7 countries
-- 9 Python files (~1500 lines)
-- 11 HTML templates (~3200 lines)
-- 2 CSS files (~3200 lines)
-- 1 JS file (~165 lines)
-- 20+ routes across 5 blueprints
-- 8 interactive queries in terminal
-- 6 foundation SQL queries preserved
-- 5 user roles supported
-- 10 moods, 5 genres, 5 device types
-- 120+ listening sessions for wrapped statistics

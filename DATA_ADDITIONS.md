@@ -104,14 +104,6 @@ From **Tame Impala - Deadbeat:**
 - **Mood variety** across all 10 moods
 - **Genre variety** across all 5 genres
 
-**Purpose:** Comprehensive listening history enables:
-- Monthly charts with trend indicators (↑↓)
-- Consistency metrics (active months ≥5 plays)
-- Longest streak calculations
-- Diversity index for balanced listening
-- Mood analysis across the year
-- Genre preference identification
-- Social features (jam sessions, top partner)
 
 ---
 
@@ -129,15 +121,5 @@ All **10 moods** represented across songs and albums:
 9. **Aggressive** - Metal, rap (Metallica, Eminem)
 10. **Cool** - Indie, rock (Arctic Monkeys, Tame Impala)
 
----
-
-## Genre Distribution
-
-All **5 genres** well-represented:
-- **Pop:** 6 songs (29%) - Lady Gaga, Billie Eilish, The Weeknd, Sade
-- **Rock:** 9 songs (43%) - Queen, Arctic Monkeys, Depeche Mode, Radiohead, Massive Attack
-- **Indie:** 4 songs (19%) - Fontaines D.C., Interpol, Tame Impala
-- **Rap:** 1 song (5%) - Eminem
-- **Metal:** 1 song (5%) - Metallica
 
 ---

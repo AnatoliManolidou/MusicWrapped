@@ -46,11 +46,13 @@ Write-Host "OK Dependencies installed" -ForegroundColor Green
 
 # Configuration reminder
 Write-Host "`n=== IMPORTANT: Database Configuration ===" -ForegroundColor Cyan
-Write-Host "Before running the app, please update config.py with your MySQL credentials:" -ForegroundColor Yellow
-Write-Host "  DB_USER = 'root'" -ForegroundColor White
-Write-Host "  DB_PASSWORD = 'your_mysql_password'  # <- Change this!" -ForegroundColor White
-Write-Host "  DB_HOST = 'localhost'" -ForegroundColor White
-Write-Host "  DB_NAME = 'musicwrappeddatabase'" -ForegroundColor White
+Write-Host "Create a .env file with your MySQL credentials:" -ForegroundColor Yellow
+Write-Host "  1. Copy .env.example to .env" -ForegroundColor White
+Write-Host "  2. Edit .env and set DB_PASSWORD to your MySQL password" -ForegroundColor White
+Write-Host ""
+Write-Host "Example commands:" -ForegroundColor Yellow
+Write-Host "  Copy-Item .env.example .env" -ForegroundColor White
+Write-Host "  notepad .env" -ForegroundColor White
 Write-Host ""
 
 # Database setup reminder
@@ -58,15 +60,18 @@ Write-Host "=== Database Setup ===" -ForegroundColor Cyan
 Write-Host "Import the database using the SQL files in the database folder:" -ForegroundColor Yellow
 Write-Host "  mysql -u root -p < database\dbdump.sql" -ForegroundColor White
 Write-Host "  mysql -u root -p < database\users.sql" -ForegroundColor White
+Write-Host "  mysql -u root -p < database\add_user_roles.sql" -ForegroundColor White
+Write-Host "  mysql -u root -p < database\database_additions.sql" -ForegroundColor White
 Write-Host ""
 
 Write-Host "=== Setup Complete! ===" -ForegroundColor Green
 Write-Host "To run the application:" -ForegroundColor Yellow
-Write-Host "  1. Update config.py with your database password" -ForegroundColor White
+Write-Host "  1. Create and configure .env file with your database password" -ForegroundColor White
 Write-Host "  2. Run: python app.py" -ForegroundColor White
 Write-Host "  3. Open browser: http://localhost:5000" -ForegroundColor White
 Write-Host ""
-Write-Host "Login credentials (from database):" -ForegroundColor Yellow
-Write-Host "  End User: nikos_89 / (check database for password)" -ForegroundColor White
+Write-Host "Login credentials:" -ForegroundColor Yellow
+Write-Host "  End User: vinylcollector / password123" -ForegroundColor White
+Write-Host "  Content Manager: maria_bel / Maria_It3 " -ForegroundColor White
 Write-Host ""
 
