@@ -2,26 +2,13 @@
 
 ### 1. Update Database Password
 
-**Option A: Using .env file (Recommended)**
+**Using .env file **
 
 Create a `.env` file in the MusicWrapped directory with:
 
 ```
 DB_PASSWORD=your_mysql_password_here
-```
 
-**Option B: Hardcode in config.py**
-
-Open `config.py` and change line 19:
-
-```python
-DB_PASSWORD = os.environ.get('DB_PASSWORD')  # Must be set in .env file
-```
-
-to:
-
-```python
-DB_PASSWORD = os.environ.get('DB_PASSWORD') or 'your_mysql_password_here'
 ```
 
 ### 2. Run Setup Script (Optional)
@@ -62,15 +49,13 @@ cd /d D:\MusicWrapped
 
 ### 5. Run the Application
 
-Make sure to activate the virtual environment first:
+Make sure to activate the virtual environment, if it has not been avtivated yet:
 
 ```powershell
 cd d:\MusicWrapped
 .\venv\Scripts\Activate
 python app.py
 ```
-
-**Note:** You must activate the virtual environment every time you open a new terminal to run the app.
 
 ### 6. Open in Browser
 
@@ -87,19 +72,6 @@ Navigate to: **http://localhost:5000**
 - Password: `Maria_It3`
 
 *See `user_credentials.md` for all available users*
-
-## 📁 Project Structure
-
-```
-MusicWrapped/
-├── app.py                  # Main app - RUN THIS
-├── config.py              # Database config - EDIT THIS FIRST
-├── models.py              # Database models
-├── requirements.txt       # Dependencies
-├── routes/                # Application routes
-├── templates/             # HTML templates
-└── static/               # CSS, JS, images
-```
 
 ##  Features
 
