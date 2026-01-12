@@ -2,13 +2,17 @@
 
 ### 1. Update Database Password
 
-**Using .env file **
+Copy `.env.example` to `.env` and update with your MySQL password:
 
-Create a `.env` file in the MusicWrapped directory with:
+```powershell
+Copy-Item .env.example .env
+notepad .env
+```
+
+In the `.env` file, replace `your_mysql_password_here` with your actual MySQL password:
 
 ```
-DB_PASSWORD=your_mysql_password_here
-
+DB_PASSWORD=your_actual_password
 ```
 
 ### 2. Run Setup Script (Optional)

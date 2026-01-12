@@ -1,5 +1,12 @@
 # Music Wrapped - Interactive Music Analytics Platform
 
+This project is the third deliverable for the course Data Bases (ECE AUTH, 2025–2026). Our team:
+
+Ομάδα 25
+Μανωλίδου Ανατολή 10874 amanolid@ece.auth.gr
+Σκλαβενίτης Γεώργιος 10708 gsklaven@ece.auth.gr
+Τζίνα Θεοδώρα 10715 tzinatheod@ece.auth.gr
+
 A Flask web application with a unique DOS/terminal aesthetic that transforms a comprehensive music listening database into an interactive "Wrapped" experience. Built on a MySQL database with 14 tables tracking users, artists, albums, songs, and listening history.
 
 ##  Project Overview
@@ -31,6 +38,20 @@ MusicWrapped/
 ├── config.py                   # Database configuration
 ├── models.py                   # SQLAlchemy ORM models (14 tables)
 ├── requirements.txt            # Python dependencies
+├── setup.ps1                   # PowerShell setup script
+├── .env.example                # Environment configuration template
+├── .gitignore                  # Git ignore rules
+├── README.md                   # This file (project overview)
+├── PROJECT_STRUCTURE.md        # Detailed architecture documentation
+├── DATA_ADDITIONS.md           # Added artists/albums/songs details
+├── QUICKSTART.md               # Quick setup guide
+├── user_credentials.md         # Test user login credentials
+├── database/                   # SQL database files
+│   ├── dbdump.sql             # Complete database dump
+│   ├── users.sql              # MySQL user creation
+│   ├── add_user_roles.sql     # User role assignments
+│   ├── database_additions.sql # Additional data
+│   └── query1-6.sql           # Analytical queries
 ├── routes/                     # Flask blueprints (controllers)
 │   ├── auth.py                # Authentication (login/logout)
 │   ├── dashboard.py           # Wrapped stats, history, analytics
@@ -39,16 +60,24 @@ MusicWrapped/
 │   └── content_manager.py     # CRUD operations
 ├── templates/                  # Jinja2 HTML templates
 │   ├── base.html              # Base template with DOS navigation
-│   ├── auth/                  # Login page
+│   ├── auth/
+│   │   └── login.html         # Login page
 │   ├── dashboard/             # Wrapped, history, stats pages
-│   │   └── home.html          # Interactive terminal (1200+ lines)
-│   ├── songs/                 # Song detail templates
-│   ├── artists/               # Artist detail templates
+│   │   ├── home.html          # Interactive terminal
+│   │   ├── history.html       # Listening history
+│   │   └── stats.html         # Statistics page
+│   ├── songs/
+│   │   └── detail.html        # Song detail page
+│   ├── artists/
+│   │   └── detail.html        # Artist detail page
 │   └── content_manager/       # Management interfaces
+│       ├── index.html         # Manager dashboard
+│       ├── artists.html       # Artist list
+│       └── artist_form.html   # Artist create/edit form
 └── static/                     # Static assets
     ├── css/
-    │   ├── style.css          # Main stylesheet (2600+ lines)
-    │   └── interactive-terminal.css  # Terminal styles (590+ lines)
+    │   ├── style.css          # Main stylesheet 
+    │   └── interactive-terminal.css  # Terminal styles 
     └── js/
         └── main.js            # JavaScript utilities
 ```
@@ -58,8 +87,6 @@ MusicWrapped/
 ### End User Features
 
 #### **Wrapped 2025 Dashboard** (Interactive Terminal)
-- **Boot Sequence:** Full-screen DOS-style boot animation (5.5s)
-- **Hero Section:** Total listening time display with scroll prompt
 - **Interactive Terminal:** Command-line interface with 8 queries
   1. `run total_plays` - Total playback with progress bars
   2. `run top_artists` - Top 5 artists with diversity index
@@ -93,7 +120,6 @@ MusicWrapped/
 - Play count (personal vs global)
 - Personal rank for this song
 - Monthly listening charts (user + overall)
-- Like/unlike functionality
 
 #### **Artist Details**
 - Artist metadata (type, country, formation date)
@@ -101,14 +127,11 @@ MusicWrapped/
 - Album discography
 - Personal listen count
 - Monthly listening charts (user + overall)
-- Follow/unfollow functionality
 
 ### Content Manager Features
 - **Dashboard:** Entity counts (artists, albums, songs)
 - **Artist Management:** Create, edit, delete artists with validation
-- **Album Management:** Manage albums with mood tags
-- **Song Management:** Full CRUD with lyrics, moods, artist/album relationships
-- **Form Validation:** Server-side validation and error handling
+
 
 ---
 
@@ -119,81 +142,67 @@ MusicWrapped/
 - MySQL Server 8.0+
 - Git (optional)
 
-### Step 1: Clone/Navigate to the Project
+### Step 1: Configure Database Connection 
+
+Copy `.env.example` to `.env` and update with your MySQL password:
 
 ```powershell
-cd d:\MusicWrapped
-```
-
-### Step 2: Create a Virtual Environment
-
-```powershell
-python -m venv venv
-```
-
-### Step 3: Activate the Virtual Environment
-
-```powershell
-.\venv\Scripts\Activate
-```
-
-### Step 4: Install Dependencies
-
-```powershell
-pip install -r requirements.txt
-```
-
-### Step 5: Set Up the Database
-
-1. Make sure MySQL is running
-
-2. Import the database dump:
-
-```powershell
-# Import the database (SQL files are in the database folder)
-mysql -u root -p < database\dbdump.sql
-
-# Create users and assign privileges
-mysql -u root -p < database\users.sql
-
-# Add user roles
-mysql -u root -p < database\add_user_roles.sql
-
-# Example additions
-mysql -u root -p < database\database_additions.sql
-```
-
-### Step 6: Configure Database Connection (IMPORTANT!)
-
-**Create a `.env` file** in the MusicWrapped directory with your database credentials:
-
-```powershell
-# Create the .env file
-New-Item -Path .env -ItemType File
-
-# Open it in notepad
+Copy-Item .env.example .env
 notepad .env
 ```
 
-**Add this content to the `.env` file:**
+In the `.env` file, replace `your_mysql_password_here` with your actual MySQL root password:
 
 ```env
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_HOST=localhost
-DB_NAME=musicwrappeddatabase
+DB_PASSWORD=your_actual_password
 ```
 
-Replace `your_mysql_password` with your actual MySQL root password.
-
-
-### Step 7: Run the Application
+### Step 2: Run Setup Script (Recommended)
 
 ```powershell
-# Make sure you're in the MusicWrapped directory
 cd d:\MusicWrapped
+.\setup.ps1
+```
 
-# Run the Flask app
+This will:
+- Check Python and MySQL
+- Create virtual environment
+- Install dependencies
+
+### Step 3: Manual Setup (Alternative)
+
+If the setup script doesn't work, use manual setup:
+
+```powershell
+# Create and activate virtual environment
+python -m venv venv
+.\venv\Scripts\Activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Step 4: Import the Database
+
+If you haven't already imported the database, open Command Prompt (cmd) and run:
+
+```cmd
+cd /d D:\MusicWrapped
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\dbdump.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\users.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\add_user_roles.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\database_additions.sql
+```
+
+**Note:** Adjust the MySQL path if you have a different version (e.g., `MySQL Server 8.4`).
+
+### Step 5: Run the Application
+
+Make sure to activate the virtual environment, if it has not been activated yet:
+
+```powershell
+cd d:\MusicWrapped
+.\venv\Scripts\Activate
 python app.py
 ```
 
@@ -212,7 +221,6 @@ The application will start on `http://localhost:5000`
    - Type `help` to see all available commands
    - Type `run total_plays` to see your playback stats
    - Type `run monthly_chart` to visualize your year
-   - Use arrow keys to navigate command history
 5. Explore song/artist details by clicking from any list
 
 ### For Content Managers
@@ -231,7 +239,7 @@ The application will start on `http://localhost:5000`
 The application supports five user roles defined in the database:
 
 - **End_User:** View Wrapped statistics, history, explore songs/artists
-- **Content_Manager:** Full CRUD operations on artists  albums and songs for future enhancement
+- **Content_Manager:** Full CRUD operations on artists (albums and songs for future enhancement)
 - **Data_Analyst:** Read-only access to all data (future enhancement)
 - **Artist:** Artist-specific statistics (future enhancement)
 - **Administrator:** Full system access (future enhancement)
@@ -332,27 +340,6 @@ pip install -r requirements.txt
 
 ---
 
-## Project Highlights
-
-### Database Foundation
-✅ 14 interconnected MySQL tables with complete relationships
-✅ 6 analytical SQL queries (user history, artist moods, genre filtering, etc.)
-✅ **Enhanced dataset:** Added 6 artists, 6 albums, 12 songs during development
-✅ 10 users across 5 roles and 7 countries
-✅ 135+ listening sessions spanning all of 2025
-✅ 10 moods, 5 genres, comprehensive metadata
-
-### Web Application Features
-✅ Interactive terminal interface with command system
-✅ 8 analytical queries for Wrapped statistics
-✅ Diversity index and consistency metrics
-✅ Trend indicators for monthly data (↑↓)
-✅ Role-based authentication system
-✅ Full CRUD operations for content management
-✅ Unique DOS/terminal aesthetic with VT323 font
-✅ Progressive revelation (boot → hero → terminal)
-✅ Comprehensive documentation
-
 ### Data Additions
 See [DATA_ADDITIONS.md](DATA_ADDITIONS.md) for complete details on:
 - **6 artists added:** Depeche Mode, Sade, Interpol, Radiohead, Massive Attack, Tame Impala
@@ -375,8 +362,5 @@ MySQL database with 14 interconnected tables tracking users, artists, albums, so
 
 **Web Application:**  
 Flask framework with blueprint architecture, SQLAlchemy ORM, and Jinja2 templating. Features a unique DOS/terminal aesthetic with interactive command-line interface.
-
-**Design Philosophy:**  
-Retro computing aesthetic meets modern web functionality. Progressive revelation, interactive feedback, and consistent visual language throughout.
 
 ---
