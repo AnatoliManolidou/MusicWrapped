@@ -86,8 +86,8 @@ Navigate to: **http://localhost:5000**
 - **History** - All your listens
 
 ### For Content Managers:
-- **Add Artists** - Create new artists
-- **Edit/Delete** - Manage all content
+- Add Artists - Create new artists
+- Edit/Delete - Manage all content
 
 ```
 - **Feature Enhancement** -
