@@ -92,8 +92,8 @@ Navigate to: **http://localhost:5000**
 ```
 - **Feature Enhancement** -
 
-- **Add Albums** - Create albums with moods
-- **Add Songs** - Upload songs with lyrics
+- Add Albums - Create albums with moods
+- Add Songs - Upload songs with lyrics
 ```
 
 ##  Troubleshooting
