@@ -90,11 +90,11 @@ Navigate to: **http://localhost:5000**
 - **Edit/Delete** - Manage all content
 
 ```
-- **Feature Enhancement** - 
-```
+- **Feature Enhancement** -
 
-- **Add Albums** - Create albums with moods
+ - **Add Albums** - Create albums with moods
 - **Add Songs** - Upload songs with lyrics
+```
 
 ##  Troubleshooting
 
