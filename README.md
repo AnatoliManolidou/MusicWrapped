@@ -155,6 +155,12 @@ mysql -u root -p < database\dbdump.sql
 
 # Create users and assign privileges
 mysql -u root -p < database\users.sql
+
+# Add user roles
+mysql -u root -p < database\add_user_roles.sql
+
+# Example additions
+mysql -u root -p < database\database_additions.sql
 ```
 
 ### Step 6: Configure Database Connection (IMPORTANT!)

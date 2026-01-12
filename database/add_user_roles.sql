@@ -1,5 +1,6 @@
 -- Add role column to user table
 -- First, check if role column exists and drop it to ensure clean state
+USE musicwrappeddatabase;
 SET @dbname = 'musicwrappeddatabase';
 SET @tablename = 'user';
 SET @columnname = 'role';
