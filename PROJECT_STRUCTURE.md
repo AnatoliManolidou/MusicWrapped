@@ -52,16 +52,16 @@ The MySQL database consists of 14 interconnected tables:
 - **6 analytical SQL queries** in `database/query1.sql` through `query6.sql`
 
 **Expanded During Development:**
-- **Added 6 artists:** Depeche Mode, Sade, Madonna, Radiohead, Massive Attack, Tame Impala
-- **Added 6 albums:** Violator, Diamond Life, Like a Prayer, OK Computer, Mezzanine, Deadbeat
-- **Added 12 songs** from new artists (total 20 songs)
+- **Added 6 artists:** Depeche Mode, Sade, Interpol, Radiohead, Massive Attack, Tame Impala
+- **Added 6 albums:** Violator, Diamond Life, Turn On the Bright Lights, OK Computer, Mezzanine, Deadbeat
+- **Added 11 songs** from new artists (total 21 songs)
 - **Expanded to 10 users** across 5 roles and 7 countries
-- **135+ listening sessions** spanning 2025 for comprehensive wrapped statistics
+- **120+ listening sessions** spanning 2025 for comprehensive wrapped statistics
 
 **Final Dataset:**
 - **14 artists** from 8 countries (USA, UK, Ireland, Canada, Australia)
 - **14 albums** with complete metadata and mood tags
-- **20 songs** with full lyrics, moods, and duration
+- **21 songs** with full lyrics, moods, and duration
 - **10 moods:** Happy, Melancholic, Energetic, Dark, Calm, Focused, Relaxing, Dramatic, Aggressive, Cool
 - **5 genres:** Pop, Rock, Indie, Rap, Metal
 
@@ -420,9 +420,10 @@ MusicWrapped/
 ├── setup.ps1                     # PowerShell setup script
 │
 ├── database/                     # SQL files and database documentation
-│   ├── dbdump.sql               # Full database dump
-│   ├── users.sql                # MySQL user creation
-│   ├── add_user_roles.sql       # Role assignments
+│   ├── dbdump.sql               # Full database dump (original baseline)
+│   ├── users.sql                # User password hashes
+│   ├── add_user_roles.sql       # Adds role column to user table
+│   ├── database_additions.sql   # Post-deliverable additions (6 artists, 6 albums, 11 songs, user 10)
 │   ├── query1.sql               # Original query 1 (listening history)
 │   ├── query2.sql               # Original query 2 (artist songs with moods)
 │   ├── query3.sql               # Original query 3 (users without playlists)
@@ -630,7 +631,7 @@ MusicWrapped/
 - song_id (PK, FK → song)
 - timestamp_start (PK, DATETIME)
 - timestamp_end (DATETIME)
-- device_type (ENUM: 10 device types)
+- device_type (ENUM: 5 device types)
 
 **user_likes_song**
 - user_id (PK, FK → user)
@@ -662,9 +663,9 @@ MusicWrapped/
 ✅ Database schema and relationships intact
 ✅ Enums and constraints preserved
 ✅ 6 analytical SQL queries from foundation preserved
-✅ **Added 6 artists** (Depeche Mode, Sade, Madonna, Radiohead, Massive Attack, Tame Impala)
-✅ **Added 6 albums** (Violator, Diamond Life, Like a Prayer, OK Computer, Mezzanine, Deadbeat)
-✅ **Added 12 songs** from new artists
+✅ **Added 6 artists** (Depeche Mode, Sade, Interpol, Radiohead, Massive Attack, Tame Impala)
+✅ **Added 6 albums** (Violator, Diamond Life, Turn On the Bright Lights, OK Computer, Mezzanine, Deadbeat)
+✅ **Added 11 songs** from new artists
 ✅ **Expanded to 10 users** across 5 roles
 
 ### Web Application Development
@@ -686,7 +687,7 @@ MusicWrapped/
 - 14 database tables (foundation + enhancements)
 - 14 artists from 8 countries
 - 14 albums across 5 genres
-- 20 songs with full metadata
+- 21 songs with full metadata
 - 10 users across 7 countries
 - 9 Python files (~1500 lines)
 - 11 HTML templates (~3200 lines)
@@ -696,5 +697,5 @@ MusicWrapped/
 - 8 interactive queries in terminal
 - 6 foundation SQL queries preserved
 - 5 user roles supported
-- 10 moods, 5 genres, 10 device types
-- 135+ listening sessions for wrapped statistics
+- 10 moods, 5 genres, 5 device types
+- 120+ listening sessions for wrapped statistics

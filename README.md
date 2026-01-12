@@ -19,9 +19,9 @@ Music Wrapped provides two distinct experiences:
 - 14 interconnected tables
 - 14 artists from 8 countries
 - 14 albums across 5 genres
-- 20 songs with full metadata
+- 21 songs with full metadata
 - 10 users with role-based permissions
-- 135+ listening sessions for 2025 analytics
+- 120+ listening sessions for 2025 analytics
 
 ## 📁 Project Structure
 
@@ -349,9 +349,9 @@ pip install -r requirements.txt
 
 ### Data Additions
 See [DATA_ADDITIONS.md](DATA_ADDITIONS.md) for complete details on:
-- **6 artists added:** Depeche Mode, Sade, Madonna, Radiohead, Massive Attack, Tame Impala
-- **6 albums added:** Violator, Diamond Life, Like a Prayer, OK Computer, Mezzanine, Deadbeat
-- **12 songs added** from new artists
+- **6 artists added:** Depeche Mode, Sade, Interpol, Radiohead, Massive Attack, Tame Impala
+- **6 albums added:** Violator, Diamond Life, Turn On the Bright Lights, OK Computer, Mezzanine, Deadbeat
+- **11 songs added** from new artists
 - Expanded listening history for comprehensive wrapped analytics  
 
 ---

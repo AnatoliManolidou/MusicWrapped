@@ -4,6 +4,7 @@
 -- This file contains all additions made after the original database deliverable.
 -- Run this file AFTER importing dbdump.sql and add_user_roles.sql
 -- It includes:
+--   - Addition of 'Australia' to country enum in user table
 --   - 6 new artists (Depeche Mode, Sade, Interpol, Radiohead, Massive Attack, Tame Impala)
 --   - 6 new albums with moods
 --   - 11 new songs (11-21) with moods
@@ -15,7 +16,13 @@
 USE `musicwrappeddatabase`;
 
 -- ============================================
--- 1. ADD NEW ARTISTS (9-14)
+-- 1. Australia Addiition in country enum of artist table
+-- ============================================
+ALTER TABLE `artist`
+MODIFY COLUMN `country` ENUM('USA','UK','Germany','Ireland','France','Canada','Greece', 'Australia') NOT NULL;
+
+-- ============================================
+-- 2. ADD NEW ARTISTS (9-14)
 -- ============================================
 INSERT INTO `artist` (`artist_id`, `name`, `artist_type`, `country`, `formation_date`, `active_status`) VALUES
 (9, 'Depeche Mode', 'Band', 'UK', '1980-01-01', 1),
@@ -23,21 +30,21 @@ INSERT INTO `artist` (`artist_id`, `name`, `artist_type`, `country`, `formation_
 (11, 'Interpol', 'Band', 'USA', '1997-01-01', 1),
 (12, 'Radiohead', 'Band', 'UK', '1985-01-01', 1),
 (13, 'Massive Attack', 'Band', 'UK', '1988-01-01', 1),
-(14, 'Tame Impala', 'Solo', 'UK', '2007-01-01', 1);
+(14, 'Tame Impala', 'Solo', 'Australia', '2007-01-01', 1);
 
 -- ============================================
--- 2. ADD NEW ALBUMS (9-14)
+-- 3. ADD NEW ALBUMS (9-14)
 -- ============================================
 INSERT INTO `album` (`album_id`, `title`, `album_type`, `genre`, `release_date`, `artist_id`) VALUES
 (9, 'Violator', 'Studio', 'Rock', '1990-03-19', 9),
 (10, 'Diamond Life', 'Studio', 'Pop', '1984-07-16', 10),
-(11, 'Turn On Bright Lights', 'Studio', 'Indie', '2002-08-20', 11),
+(11, 'Turn On The Bright Lights', 'Studio', 'Indie', '2002-08-20', 11),
 (12, 'OK Computer', 'Studio', 'Rock', '1997-06-16', 12),
 (13, 'Mezzanine', 'Studio', 'Rock', '1998-04-20', 13),
 (14, 'Deadbeat', 'Studio', 'Indie', '2025-09-15', 14);
 
 -- ============================================
--- 3. ADD ALBUM MOODS
+-- 4. ADD ALBUM MOODS
 -- ============================================
 INSERT INTO `album_moods` (`album_id`, `mood`) VALUES
 (9, 'Focused'),
@@ -54,7 +61,7 @@ INSERT INTO `album_moods` (`album_id`, `mood`) VALUES
 (14, 'Melancholic');
 
 -- ============================================
--- 4. ADD NEW SONGS (11-21)
+-- 5. ADD NEW SONGS (11-21)
 -- ============================================
 INSERT INTO `song` (`song_id`, `title`, `duration`, `genre`, `release_date`, `lyrics`, `language`, `artist_id`, `album_id`, `album_track_number`) VALUES
 (11, 'Enjoy the Silence', '00:06:13', 'Rock', '1990-02-05', 'Words like violence...', 'English', 9, 9, 2),

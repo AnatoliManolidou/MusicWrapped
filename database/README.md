@@ -8,24 +8,45 @@ This folder contains all the SQL files needed to set up and test the Music Wrapp
 Complete database dump including:
 - Database schema creation
 - All table definitions with constraints
-- Sample data (artists, songs, albums, users, listening history)
-- Triggers and stored procedures
-- Views
+- Original data (8 artists, 8 albums, 10 songs, 9 users, base listening history)
 
 **Usage:**
-```sql
-mysql -u root -p < database/dbdump.sql
+```cmd
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\dbdump.sql
 ```
 
 ### **users.sql**
-Database user creation and privilege management:
-- Creates 5 user roles: Administrator, Content_Manager, Data_Analyst, End_User, Artist
-- Assigns appropriate privileges for each role
-- Used by the Flask app for role-based access control
+Password hashes for all users:
+- Contains password values for all 10 users
+- Must be imported after dbdump.sql
 
 **Usage:**
-```sql
-mysql -u root -p < database/users.sql
+```cmd
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\users.sql
+```
+
+### **add_user_roles.sql**
+Adds role column to user table:
+- Creates role ENUM column with 5 roles
+- Assigns Content_Manager role to nikos_89 and maria_bel
+- Idempotent (safe to run multiple times)
+
+**Usage:**
+```cmd
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\add_user_roles.sql
+```
+
+### **database_additions.sql**
+Post-deliverable additions:
+- 6 new artists (Depeche Mode, Sade, Interpol, Radiohead, Massive Attack, Tame Impala)
+- 6 new albums with mood tags
+- 11 new songs (songs 11-21) with mood tags
+- User 10 (vinylcollector)
+- 120+ listening sessions spanning all of 2025
+
+**Usage:**
+```cmd
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\database_additions.sql
 ```
 
 ---
@@ -71,15 +92,15 @@ Shows: Collaborative listening sessions with duration
 
 ## Quick Setup Commands
 
-```powershell
-# Import database structure and data
-mysql -u root -p < database/dbdump.sql
-
-# Create users and set permissions
-mysql -u root -p < database/users.sql
+```cmd
+# Import in this exact order:
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\dbdump.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\users.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\add_user_roles.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\database_additions.sql
 
 # Test individual queries (optional)
-mysql -u root -p musicwrappeddatabase < database/query1.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\query1.sql
 ```
 
 ---
