@@ -2,10 +2,10 @@
 
 This project is the third deliverable for the course Data Bases (ECE AUTH, 2025–2026). Our team:
 
-Ομάδα 25
-Μανωλίδου Ανατολή 10874 amanolid@ece.auth.gr
-Σκλαβενίτης Γεώργιος 10708 gsklaven@ece.auth.gr
-Τζίνα Θεοδώρα 10715 tzinatheod@ece.auth.gr
+Ομάδα 25<br> 
+Μανωλίδου Ανατολή 10874 amanolid@ece.auth.gr<br> 
+Σκλαβενίτης Γεώργιος 10708 gsklaven@ece.auth.gr<br> 
+Τζίνα Θεοδώρα 10715 tzinatheod@ece.auth.gr<br> 
 
 A Flask web application with a unique DOS/terminal aesthetic that transforms a comprehensive music listening database into an interactive "Wrapped" experience. Built on a MySQL database with 14 tables tracking users, artists, albums, songs, and listening history.
 
