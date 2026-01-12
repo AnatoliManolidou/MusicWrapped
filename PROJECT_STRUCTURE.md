@@ -508,13 +508,29 @@ MusicWrapped/
 
 ### Wrapped 2025 Statistics
 - **Total Playback:** Plays and minutes with inline progress bars
+  - **Percentile Ranking:** Shows user's rank compared to all users
+  - Progress bars represent percentile position (not absolute values)
+  - Dynamic messages based on ranking (top 10%, top 25%, etc.)
 - **Top Rankings:** Artists, songs, albums with diversity index
 - **Jam Sessions:** Solo mode or partner detection
 - **Mood Analysis:** Dominant emotional profile
 - **Genre Identity:** Primary genre with description
 - **Monthly Chart:** Bar graph with trend indicators (↑↓), consistency %, longest streak
 
-### 2. Diversity Index Calculation
+### 2. Percentile Ranking Calculation
+- Compares user's activity against all users in the database
+- **Plays Percentile:** (users with fewer plays / total users) × 100
+- **Minutes Percentile:** (users with fewer minutes / total users) × 100
+- **Average Percentile:** (plays_percentile + minutes_percentile) / 2
+- **Dynamic Messages:**
+  - ≥90%: "You were in the top X% of most active users!"
+  - ≥75%: "You were in the top X% of listeners — impressive!"
+  - ≥50%: "You kept the music spinning all year long."
+  - ≥25%: "A solid year of listening."
+  - <25%: "Music was part of your year."
+- Progress bars in `total_plays` output show percentile, not absolute values
+
+### 3. Diversity Index Calculation
 - Measures evenness of play distribution
 - Formula: `1 - (stdDev / mean)`
 - **Edge case:** Returns 0% when only 1 item (no diversity possible)
@@ -522,7 +538,7 @@ MusicWrapped/
 - Lower score = concentrated favorites (e.g., 20% means one dominant item)
 - Displayed with 25-character progress bars
 
-### 3. Consistency Metrics
+### 4. Consistency Metrics
 - **Consistency %:** Months with ≥5 plays / 12 * 100
 - **Longest Streak:** Consecutive active months
 - **Dynamic Messages:** Based on consistency level
