@@ -120,6 +120,56 @@ def home():
         extract('year', UserListensSong.timestamp_start) == current_year
     ).scalar() or 0
     
+    # Calculate comparative statistics for all End Users
+    all_users_stats = db.session.query(
+        UserListensSong.user_id,
+        func.count(UserListensSong.timestamp_start).label('plays'),
+        func.sum(
+            func.timestampdiff(
+                db.text('MINUTE'),
+                UserListensSong.timestamp_start,
+                UserListensSong.timestamp_end
+            )
+        ).label('minutes')
+    ).join(
+        User, UserListensSong.user_id == User.user_id
+    ).filter(
+        extract('year', UserListensSong.timestamp_start) == current_year,
+        User.role == 'End_User'
+    ).group_by(
+        UserListensSong.user_id
+    ).all()
+    
+    # Calculate percentiles
+    all_plays = [stat.plays for stat in all_users_stats if stat.plays]
+    all_minutes = [stat.minutes for stat in all_users_stats if stat.minutes]
+    
+    plays_percentile = 0
+    minutes_percentile = 0
+    max_plays = max(all_plays) if all_plays else 1
+    max_minutes = max(all_minutes) if all_minutes else 1
+    
+    if all_plays:
+        users_below_plays = sum(1 for p in all_plays if p < total_plays)
+        plays_percentile = round((users_below_plays / len(all_plays)) * 100)
+    
+    if all_minutes:
+        users_below_minutes = sum(1 for m in all_minutes if m < total_time_query)
+        minutes_percentile = round((users_below_minutes / len(all_minutes)) * 100)
+    
+    # Determine activity level message
+    avg_percentile = (plays_percentile + minutes_percentile) / 2
+    if avg_percentile >= 90:
+        activity_message = f"You were in the top {100 - avg_percentile:.0f}% of most active users!"
+    elif avg_percentile >= 75:
+        activity_message = f"You were in the top {100 - avg_percentile:.0f}% of listeners — impressive!"
+    elif avg_percentile >= 50:
+        activity_message = "You kept the music spinning all year long."
+    elif avg_percentile >= 25:
+        activity_message = "A solid year of listening."
+    else:
+        activity_message = "Music was part of your year."
+    
     # Liked songs count
     liked_count = UserLikesSong.query.filter_by(user_id=user_id).count()
     
@@ -230,7 +280,12 @@ def home():
                          monthly_stats=monthly_stats,
                          top_month=top_month,
                          top_month_count=top_month_count,
-                         year=current_year)
+                         year=current_year,
+                         plays_percentile=plays_percentile,
+                         minutes_percentile=minutes_percentile,
+                         max_plays=max_plays,
+                         max_minutes=max_minutes,
+                         activity_message=activity_message)
 
 @bp.route('/history')
 @login_required

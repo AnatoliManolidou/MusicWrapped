@@ -3,7 +3,7 @@
 | Username       | Password     | Account Type      |
 |----------------|--------------|-------------------|
 | nikos_89       | Nikos!2025   | Content_Manager   |
-| anna_mnd       | Anna//Pass2  | Data_Analyst      |
+| anna_mnd       | Anna//Pass2  | End_User          |
 | pierre_frt     | Pierre@33    | End_User          |
 | maria_bel      | Maria_It3    | Content_Manager   |
 | john_stal      | JohnUk!5     | End_User          |

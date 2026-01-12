@@ -1,4 +1,4 @@
-# Music Wrapped - Quick Setup Script
+﻿# Music Wrapped - Quick Setup Script
 # Run this script to set up the application
 
 Write-Host "=== Music Wrapped - Setup Script ===" -ForegroundColor Green
@@ -8,7 +8,7 @@ Write-Host ""
 Write-Host "Checking Python installation..." -ForegroundColor Yellow
 try {
     $pythonVersion = python --version
-    Write-Host "✓ Found: $pythonVersion" -ForegroundColor Green
+    Write-Host "OK Found: $pythonVersion" -ForegroundColor Green
 } catch {
     Write-Host "✗ Python not found. Please install Python 3.8 or higher." -ForegroundColor Red
     exit 1
@@ -18,7 +18,7 @@ try {
 Write-Host "`nChecking MySQL service..." -ForegroundColor Yellow
 $mysqlService = Get-Service -Name "MySQL*" -ErrorAction SilentlyContinue
 if ($mysqlService -and $mysqlService.Status -eq "Running") {
-    Write-Host "✓ MySQL is running" -ForegroundColor Green
+    Write-Host "OK MySQL is running" -ForegroundColor Green
 } else {
     Write-Host "✗ MySQL is not running. Please start MySQL service." -ForegroundColor Red
     Write-Host "  You can start it with: Start-Service MySQL80 (or your MySQL service name)" -ForegroundColor Yellow
@@ -29,20 +29,20 @@ if ($mysqlService -and $mysqlService.Status -eq "Running") {
 if (-not (Test-Path "venv")) {
     Write-Host "`nCreating virtual environment..." -ForegroundColor Yellow
     python -m venv venv
-    Write-Host "✓ Virtual environment created" -ForegroundColor Green
+    Write-Host "OK Virtual environment created" -ForegroundColor Green
 } else {
-    Write-Host "`n✓ Virtual environment already exists" -ForegroundColor Green
+    Write-Host "`nOK Virtual environment already exists" -ForegroundColor Green
 }
 
 # Activate virtual environment
 Write-Host "`nActivating virtual environment..." -ForegroundColor Yellow
 & ".\venv\Scripts\Activate.ps1"
-Write-Host "✓ Virtual environment activated" -ForegroundColor Green
+Write-Host "OK Virtual environment activated" -ForegroundColor Green
 
 # Install dependencies
 Write-Host "`nInstalling dependencies..." -ForegroundColor Yellow
 pip install -r requirements.txt
-Write-Host "✓ Dependencies installed" -ForegroundColor Green
+Write-Host "OK Dependencies installed" -ForegroundColor Green
 
 # Configuration reminder
 Write-Host "`n=== IMPORTANT: Database Configuration ===" -ForegroundColor Cyan
@@ -69,3 +69,4 @@ Write-Host ""
 Write-Host "Login credentials (from database):" -ForegroundColor Yellow
 Write-Host "  End User: nikos_89 / (check database for password)" -ForegroundColor White
 Write-Host ""
+

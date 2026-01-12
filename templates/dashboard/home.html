@@ -143,6 +143,11 @@ if (window.topAlbumsData.length === 0) {
 
 // Total minutes
 window.totalMinutes = {{ total_time }};
+window.playsPercentile = {{ plays_percentile }};
+window.minutesPercentile = {{ minutes_percentile }};
+window.maxPlays = {{ max_plays }};
+window.maxMinutes = {{ max_minutes }};
+window.activityMessage = "{{ activity_message|safe }}";
 
 window.monthlyData = {
     months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -173,7 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const username = '{{ username }}';
     
     // Hide navbar during boot
+    const mainFooter = document.getElementById('mainFooter');
     if (mainNavbar) mainNavbar.style.display = 'none';
+    if (mainFooter) mainFooter.style.display = 'none';
     
     console.log('bootSequence:', bootSequence);
     console.log('mainContent:', mainContent);
@@ -184,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Timeout triggered, hiding boot and showing content');
         if (bootSequence) bootSequence.style.display = 'none';
         if (mainContent) mainContent.style.display = 'block';
+        if (mainFooter) mainFooter.style.display = 'block';
     }, 5500);
     
     // Show terminal and navbar on scroll
@@ -477,31 +485,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (index === 0) {
                     const numPlays = parseInt(result);
                     const totalMins = window.totalMinutes || 0;
-                    const maxPlays = 150;
-                    const maxMins = 1000;
+                    const maxPlays = window.maxPlays || 150;
+                    const maxMins = window.maxMinutes || 1000;
+                    const playsPerc = window.playsPercentile || 0;
+                    const minsPerc = window.minutesPercentile || 0;
+                    const activityMsg = window.activityMessage || 'Keep listening!';
                     const barWidth = 25;
                     
-                    const playFill = Math.min(barWidth, Math.round((numPlays / maxPlays) * barWidth));
+                    // Bars show percentile compared to other users (not absolute values)
+                    const playFill = Math.min(barWidth, Math.round((playsPerc / 100) * barWidth));
                     const playEmpty = barWidth - playFill;
                     const playBar = '█'.repeat(playFill) + '-'.repeat(playEmpty);
                     
-                    const minFill = Math.min(barWidth, Math.round((totalMins / maxMins) * barWidth));
+                    const minFill = Math.min(barWidth, Math.round((minsPerc / 100) * barWidth));
                     const minEmpty = barWidth - minFill;
                     const minBar = '█'.repeat(minFill) + '-'.repeat(minEmpty);
-                    
-                    // Dynamic message based on listening amount
-                    let message = '';
-                    if (totalMins >= 500) {
-                        message = 'You kept the music spinning all year long.';
-                    } else if (totalMins >= 200) {
-                        message = 'A solid year of listening.';
-                    } else if (totalMins >= 50) {
-                        message = 'Music was part of your year.';
-                    } else if (totalMins >= 10) {
-                        message = 'You dipped into the music library.';
-                    } else {
-                        message = 'Just getting started with your music journey.';
-                    }
                     
                     output += `<div class="result-box">
                         <div class="box-line">${'='.repeat(36)}</div>
@@ -510,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="box-line">Plays:   ${numPlays.toString().padStart(3)} [${playBar}]</div>
                         <div class="box-line">Minutes: ${totalMins.toString().padStart(3)} [${minBar}]</div>
                     </div>
-                    <div class="result-note">${message}</div>`;
+                    <div class="result-note">${activityMsg}</div>`;
                 }
                 // Top Artists (index 1)
                 else if (index === 1) {
@@ -682,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Generate consistency message
                         let consistencyMsg = '';
                         if (consistencyPercent >= 75) {
-                            consistencyMsg = 'You kept the music flowing steadily — your Wrapped is consistent!';
+                            consistencyMsg = 'You kept the music flowing steadily throughout the year - a true music enthusiast!';
                         } else if (consistencyPercent >= 50) {
                             consistencyMsg = 'Solid listening habits — you showed up for the music.';
                         } else if (consistencyPercent >= 25) {

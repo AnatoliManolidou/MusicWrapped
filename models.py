@@ -137,7 +137,7 @@ class UserListensSong(db.Model):
     song_id = db.Column(db.Integer, db.ForeignKey('song.song_id'), primary_key=True)
     timestamp_start = db.Column(db.DateTime, primary_key=True, nullable=False)
     timestamp_end = db.Column(db.DateTime, nullable=False)
-    device_type = db.Column(db.Enum('Mobile', 'Desktop', 'Tablet', 'Smart Speaker', 'Web', 'TV', 'Car', 'Wearable', 'Gaming Console', 'Other'), nullable=False)
+    device_type = db.Column(db.Enum('Mobile', 'Desktop', 'Tablet', 'Smart TV', 'Web Player'), nullable=False)
 
 
 class UserLikesSong(db.Model):
