@@ -42,7 +42,6 @@ pip install -r requirements.txt
 If you haven't already imported the database, open Command Prompt (cmd) and run:
 
 ```cmd
-cd /d D:\MusicWrapped
 "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\dbdump.sql
 "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\users.sql
 "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\add_user_roles.sql
@@ -56,7 +55,6 @@ cd /d D:\MusicWrapped
 Make sure to activate the virtual environment, if it has not been avtivated yet:
 
 ```powershell
-cd d:\MusicWrapped
 .\venv\Scripts\Activate
 python app.py
 ```

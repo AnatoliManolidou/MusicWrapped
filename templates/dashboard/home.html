@@ -48,67 +48,16 @@
                 
                 <!-- Terminal History (accumulated output) -->
                 <div class="terminal-history" id="terminalHistory"></div>
-                
-                <div class="command-menu" id="commandMenu" style="display: none;">
-                    <div class="command-item" data-index="0" data-result="{{ total_plays }}" data-label="TOTAL LISTENING SESSIONS" data-extra="" data-status="PLAYBACK DATA RETRIEVED">
-                        <span class="prompt">&gt;</span> QUERY TOTAL_PLAYS --year={{ year }}
-                    </div>
-                    
-                    <div class="command-item" data-index="1" data-type="list" data-label="TOP 5 ARTISTS" data-status="TOP ARTISTS COMPILED">
-                        <span class="prompt">&gt;</span> QUERY TOP_ARTISTS --limit=5 --year={{ year }}
-                    </div>
-                    
-                    <div class="command-item" data-index="2" data-type="list" data-label="TOP 5 SONGS" data-status="TOP TRACKS IDENTIFIED">
-                        <span class="prompt">&gt;</span> QUERY TOP_SONGS --limit=5 --year={{ year }}
-                    </div>
-                    
-                    <div class="command-item" data-index="3" data-type="list" data-label="TOP 5 ALBUMS" data-status="ALBUM ANALYSIS COMPLETE">
-                        <span class="prompt">&gt;</span> QUERY TOP_ALBUMS --limit=5 --year={{ year }}
-                    </div>
-                    
-                    <div class="command-item" data-index="4" data-result="{% if jam_count > 0 %}{{ top_jam_partner }}{% else %}NO JAMS DETECTED{% endif %}" data-label="{% if jam_count > 0 %}Your Music Soulmate{% else %}JAM SESSIONS{% endif %}" data-extra="{% if jam_count > 0 %}Meet your ultimate listening buddy — your music soulmate. | {{ jam_count }} SESSIONS | {{ top_jam_duration }} MINUTES{% else %}Looks like you kept it solo this year — your jam era is still loading.{% endif %}" data-status="{% if jam_count > 0 %}MATCH FOUND{% else %}NO MATCH DETECTED{% endif %}">
-                        <span class="prompt">&gt;</span> QUERY JAM_SESSIONS --highlight --year={{ year }}
-                    </div>
-                    
-                    <div class="command-item" data-index="5" data-result="{{ top_mood }}" data-label="Your 2025 Vibe" data-extra="{% if top_mood == 'Happy' %}Pure good vibes — your year was powered by smiles.{% elif top_mood == 'Melancholic' %}A beautiful kind of sad — emotional, thoughtful, and deep.{% elif top_mood == 'Energetic' %}Fast beats, big moves — you were always in motion.{% elif top_mood == 'Dark' %}Moody, mysterious, and a little rebellious.{% elif top_mood == 'Calm' %}Soft sounds, quiet moments — your comfort zone.{% elif top_mood == 'Focused' %}Locked in. Tuned out. You were in your zone.{% elif top_mood == 'Relaxing' %}Easygoing tracks for slow, peaceful days.{% elif top_mood == 'Dramatic' %}Every song was a main-character moment.{% elif top_mood == 'Aggressive' %}Loud, bold, and unapologetic.{% elif top_mood == 'Cool' %}Effortlessly smooth — your playlist had style.{% endif %}" data-status="EMOTIONAL PROFILE DETECTED">
-                        <span class="prompt">&gt;</span> QUERY MOOD_ANALYSIS --year={{ year }}
-                    </div>
-                    
-                    <div class="command-item" data-index="6" data-result="{{ favorite_genre }}" data-label="Your Sound Identity" data-extra="{% if favorite_genre == 'Pop' %}Catchy hooks and big choruses — your soundtrack was everywhere.{% elif favorite_genre == 'Rock' %}Real guitars, real attitude.{% elif favorite_genre == 'Indie' %}You like your music rare and underrated.{% elif favorite_genre == 'Rap' %}Bars, beats, and pure confidence.{% elif favorite_genre == 'Metal' %}Loud, heavy, and fearless.{% endif %}" data-status="GENRE DOMINANCE CONFIRMED">
-                        <span class="prompt">&gt;</span> QUERY TOP_GENRE --year={{ year }}
-                    </div>
-                    
-                    <div class="command-item" data-index="7" data-type="chart" data-label="YOUR YEAR IN MUSIC" data-status="YEARLY ACTIVITY MAPPED">
-                        <span class="prompt">&gt;</span> QUERY MONTHLY_CHART --visual --year={{ year }}
-                    </div>
-                </div>
-
-                <div class="terminal-help" style="display: none;">
-                    PRESS [↑↓] TO SELECT | PRESS [ENTER] TO EXECUTE | OR TYPE COMMANDS BELOW
-                </div>
 
                 <!-- Command Line Input -->
                 <div class="command-line" id="commandLine">
                     <div class="command-prompt">SYS://{{ username }}@MUSIC_WRAPPED &gt;</div>
                     <input type="text" class="command-input" id="commandInput" autocomplete="off" placeholder="Type 'help' or 'run total_plays'">
                 </div>
-
-                <div class="terminal-result" id="terminalResult" style="display: none;">
-                    <div class="result-executing" id="executingMessage">
-                        EXECUTING QUERY<span class="dots"></span>
-                    </div>
-                    <div class="result-loader">█</div>
-                    <div class="result-output" id="resultOutput"></div>
-                </div>
             </div>
             <div class="terminal-footer">
                 <span>═══════════════════════════════════════════════════════</span>
             </div>
-        </div>
-
-        <!-- Navigation Prompt -->
-        <div class="nav-prompt" style="display: none;">
-            <span class="prompt-text">&gt; PRESS [STATS] TO VIEW DETAILED ANALYTICS_</span>
         </div>
 </div>
 
@@ -214,9 +163,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Command Line Interface
     if (commandInput) {
-        const commandMenu = document.getElementById('commandMenu');
-        const terminalResult = document.getElementById('terminalResult');
-        const commandLine = document.getElementById('commandLine');
         const terminalHistory = document.getElementById('terminalHistory');
         
         // Command mappings
@@ -343,15 +289,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function executeQueryToHistory(index) {
-            const commandItems = commandMenu.querySelectorAll('.command-item');
-            if (!commandItems[index]) return;
+            // Data mapping for each query type
+            const queryData = [
+                { result: '{{ total_plays }}', label: 'TOTAL LISTENING SESSIONS', extra: '', status: 'PLAYBACK DATA RETRIEVED' },
+                { type: 'list', label: 'TOP 5 ARTISTS', status: 'TOP ARTISTS COMPILED' },
+                { type: 'list', label: 'TOP 5 SONGS', status: 'TOP TRACKS IDENTIFIED' },
+                { type: 'list', label: 'TOP 5 ALBUMS', status: 'ALBUM ANALYSIS COMPLETE' },
+                { result: '{% if jam_count > 0 %}{{ top_jam_partner }}{% else %}NO JAMS DETECTED{% endif %}', label: '{% if jam_count > 0 %}Your Music Soulmate{% else %}JAM SESSIONS{% endif %}', extra: '{% if jam_count > 0 %}Meet your ultimate listening buddy — your music soulmate. | {{ jam_count }} SESSIONS | {{ top_jam_duration }} MINUTES{% else %}Looks like you kept it solo this year — your jam era is still loading.{% endif %}', status: '{% if jam_count > 0 %}MATCH FOUND{% else %}NO MATCH DETECTED{% endif %}' },
+                { result: '{{ top_mood }}', label: 'Your 2025 Vibe', extra: '{% if top_mood == "Happy" %}Pure good vibes — your year was powered by smiles.{% elif top_mood == "Melancholic" %}A beautiful kind of sad — emotional, thoughtful, and deep.{% elif top_mood == "Energetic" %}Fast beats, big moves — you were always in motion.{% elif top_mood == "Dark" %}Moody, mysterious, and a little rebellious.{% elif top_mood == "Calm" %}Soft sounds, quiet moments — your comfort zone.{% elif top_mood == "Focused" %}Locked in. Tuned out. You were in your zone.{% elif top_mood == "Relaxing" %}Easygoing tracks for slow, peaceful days.{% elif top_mood == "Dramatic" %}Every song was a main-character moment.{% elif top_mood == "Aggressive" %}Loud, bold, and unapologetic.{% elif top_mood == "Cool" %}Effortlessly smooth — your playlist had style.{% endif %}', status: 'EMOTIONAL PROFILE DETECTED' },
+                { result: '{{ favorite_genre }}', label: 'Your Sound Identity', extra: '{% if favorite_genre == "Pop" %}Catchy hooks and big choruses — your soundtrack was everywhere.{% elif favorite_genre == "Rock" %}Real guitars, real attitude.{% elif favorite_genre == "Indie" %}You like your music rare and underrated.{% elif favorite_genre == "Rap" %}Bars, beats, and pure confidence.{% elif favorite_genre == "Metal" %}Loud, heavy, and fearless.{% endif %}', status: 'GENRE DOMINANCE CONFIRMED' },
+                { type: 'chart', label: 'YOUR YEAR IN MUSIC', status: 'YEARLY ACTIVITY MAPPED' }
+            ];
             
-            const selectedCommand = commandItems[index];
-            const type = selectedCommand.dataset.type;
-            const result = selectedCommand.dataset.result;
-            const label = selectedCommand.dataset.label;
-            const extra = selectedCommand.dataset.extra;
-            const status = selectedCommand.dataset.status || 'QUERY COMPLETE';
+            if (!queryData[index]) return;
+            
+            const selectedCommand = queryData[index];
+            const type = selectedCommand.type;
+            const result = selectedCommand.result;
+            const label = selectedCommand.label;
+            const extra = selectedCommand.extra;
+            const status = selectedCommand.status || 'QUERY COMPLETE';
             
             // Loading sequences for each query
             const loadingSequences = {
@@ -388,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     ]
                 },
                 4: { // jam_sessions
-                    module: 'JAM_ENGINE',
+                    module: 'JAM_SESSIONS',
                     steps: [
                         'Searching collaboration records…',
                         'Calculating vibe compatibility…',
@@ -846,41 +803,6 @@ document.addEventListener('DOMContentLoaded', function() {
     line-height: 1.6;
 }
 
-.monthly-chart-result {
-    display: flex;
-    align-items: flex-end;
-    height: 150px;
-    gap: 5px;
-    margin: 20px 0;
-}
-
-.chart-month-inline {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.chart-bar-inline {
-    width: 100%;
-    background: linear-gradient(to top, var(--primary-color), rgba(168, 204, 140, 0.6));
-    border: 1px solid var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bar-count-inline {
-    font-size: 12px;
-    color: #000;
-}
-
-.chart-label-inline {
-    font-size: 12px;
-    margin-top: 5px;
-}
-
 .help-output {
     font-family: 'VT323', monospace;
     color: var(--primary-color);
@@ -1039,46 +961,6 @@ document.addEventListener('DOMContentLoaded', function() {
     50%, 100% {
         opacity: 0;
     }
-}
-
-.result-meters {
-    display: flex;
-    gap: 30px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-}
-
-.result-meter {
-    flex: 1;
-    min-width: 200px;
-}
-
-.meter-label {
-    color: #aaa;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-}
-
-.meter-bar {
-    width: 100%;
-    height: 20px;
-    background: rgba(168, 204, 140, 0.1);
-    border: 1px solid var(--primary-color);
-    position: relative;
-    overflow: hidden;
-}
-
-.meter-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-color), rgba(168, 204, 140, 0.6));
-    transition: width 1s ease-out;
-}
-
-.meter-value {
-    color: var(--primary-color);
-    font-size: 0.9rem;
-    margin-top: 5px;
-    text-align: right;
 }
 
 /* Result Box Styles */
