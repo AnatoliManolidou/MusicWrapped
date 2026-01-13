@@ -3,95 +3,417 @@
 {% block title %}{{ song.title }} - Music Wrapped{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="back-button">
-        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i> Back</a>
+<div class="container terminal-page">
+    <div class="back-link">
+        <a href="javascript:history.back()">&lt; RETURN</a>
     </div>
 
-    <div class="song-detail-header">
-        <div class="song-artwork">
-            <i class="fas fa-compact-disc fa-5x"></i>
-        </div>
-        <div class="song-header-info">
-            <h1>{{ song.title }}</h1>
-            <h2>
-                <a href="{{ url_for('artists.detail', artist_id=artist.artist_id) }}">
-                    {{ artist.name }}
-                </a>
-            </h2>
+    <div class="terminal-box">
+        <div class="song-info">
+            <div class="song-name">♪ {{ song.title }}</div>
+            <div class="song-by">
+                BY: <a href="{{ url_for('artists.detail', artist_id=song.artist_id) }}">{{ artist.name }}</a>
+            </div>
             {% if album %}
-            <p class="album-info">
-                <i class="fas fa-record-vinyl"></i>
-                {{ album.title }} ({{ album.release_date.year }})
-            </p>
+            <div class="song-album-info">ALBUM: {{ album.title }} ({{ album.release_date.year }})</div>
             {% endif %}
-            <div class="song-meta">
-                <span><i class="fas fa-music"></i> {{ song.genre }}</span>
-                <span><i class="fas fa-clock"></i> {{ song.get_duration_formatted() }}</span>
-                <span><i class="fas fa-calendar"></i> {{ song.release_date.year }}</span>
-                <span><i class="fas fa-language"></i> {{ song.language }}</span>
-            </div>
         </div>
-    </div>
 
-    <!-- User Stats for this Song -->
-    <div class="song-stats-section">
-        <h2><i class="fas fa-chart-bar"></i> Your Stats</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>{{ user_play_count }}</h3>
-                <p>Times You Played This</p>
+        <div class="song-metadata-terminal">
+            <span>GENRE: {{ song.genre }}</span> | 
+            <span>DURATION: {{ song.get_duration_formatted() }}</span> | 
+            <span>YEAR: {{ song.release_date.year }}</span> | 
+            <span>MOOD: {{ mood_str }}</span>
+        </div>
+
+        <div class="terminal-box-header stats-header">
+            <span>╔═══════════════════════════════════════════════════════════════╗</span>
+        </div>
+        <div class="terminal-box-title">
+            ║ YOUR LISTENING DATA                                           ║
+        </div>
+        <div class="terminal-box-header">
+            <span>╠═══════════════════════════════════════════════════════════════╣</span>
+        </div>
+        
+        <div class="stats-terminal-centered">
+            <div class="stat-item">
+                <span class="stat-value">{{ user_play_count }}</span>
+                <span class="stat-label">YOUR PLAYS</span>
             </div>
-            <div class="stat-card">
-                <h3>{{ total_play_count }}</h3>
-                <p>Total Plays (All Users)</p>
-            </div>
-            <div class="stat-card">
-                <h3>#{{ user_rank }}</h3>
-                <p>Rank in Your Top Songs</p>
-            </div>
-            <div class="stat-card">
-                <form method="POST" action="{{ url_for('songs.like', song_id=song.song_id) }}" style="display: inline;">
-                    <button type="submit" class="like-button {% if is_liked %}liked{% endif %}">
-                        <i class="fas fa-heart"></i>
-                        {{ 'Liked' if is_liked else 'Like' }}
-                    </button>
-                </form>
+            <div class="stat-item">
+                <span class="stat-value">RANK #{{ user_rank }}</span>
+                <span class="stat-label">YOUR RANK</span>
             </div>
         </div>
 
-        {% if first_listen %}
-        <div class="listening-timeline">
-            <p><strong>First Listen:</strong> {{ first_listen.strftime('%B %d, %Y') }}</p>
-            <p><strong>Last Listen:</strong> {{ last_listen.strftime('%B %d, %Y') }}</p>
+        <div class="terminal-box-header">
+            <span>╚═══════════════════════════════════════════════════════════════╝</span>
         </div>
-        {% endif %}
-    </div>
 
-    <!-- Moods -->
-    {% if moods %}
-    <div class="moods-section">
-        <h2><i class="fas fa-face-smile"></i> Moods</h2>
-        <div class="mood-tags">
-            {% for mood in moods %}
-            <span class="mood-tag">{{ mood }}</span>
+        {% if monthly_stats %}
+        <div class="section-title-chart">YOUR 2025 LISTENING ACTIVITY</div>
+        <div class="monthly-chart-song">
+            {% set month_names = ['', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'] %}
+            {% set monthly_dict = {} %}
+            {% for month, count in monthly_stats %}
+                {% set _ = monthly_dict.update({month|int: count}) %}
+            {% endfor %}
+            
+            {% for i in range(1, 13) %}
+                <div class="chart-month">
+                    {% if monthly_dict.get(i, 0) > 0 and max_count > 0 %}
+                        <div class="chart-bar-song" style="height: {{ (monthly_dict.get(i, 0) / max_count * 100) }}%;">
+                            <span class="bar-count">{{ monthly_dict.get(i, 0) }}</span>
+                        </div>
+                    {% else %}
+                        <div class="chart-bar-empty"></div>
+                    {% endif %}
+                    <div class="chart-label">{{ month_names[i] }}</div>
+                </div>
             {% endfor %}
         </div>
-    </div>
-    {% endif %}
+        
+        {% if top_month %}
+        <div class="chart-info">
+            PEAK: {{ month_names[top_month] }} with {{ top_month_count }} plays
+        </div>
+        {% endif %}
+        {% endif %}
 
-    <!-- Lyrics -->
-    {% if song.lyrics %}
-    <div class="lyrics-section">
-        <h2><i class="fas fa-scroll"></i> Lyrics</h2>
-        <div class="lyrics-content">
-            {{ song.lyrics | safe }}
+        {% if moods %}
+        <div class="section-title">► MOODS</div>
+        <div class="moods-terminal">
+            {% for mood in moods %}
+            <span class="mood-badge">[{{ mood }}]</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="terminal-box-header stats-header">
+            <span>╔═══════════════════════════════════════════════════════════════╗</span>
+        </div>
+        <div class="terminal-box-title">
+            ║ OVERALL STATISTICS (ALL LISTENERS)                            ║
+        </div>
+        <div class="terminal-box-header">
+            <span>╚═══════════════════════════════════════════════════════════════╝</span>
+        </div>
+
+        {% if overall_monthly_stats %}
+        <div class="section-title-chart">OVERALL 2025 LISTENING ACTIVITY</div>
+        <div class="monthly-chart-song">
+            {% set month_names = ['', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'] %}
+            {% set monthly_dict = {} %}
+            {% for month, count in overall_monthly_stats %}
+                {% set _ = monthly_dict.update({month|int: count}) %}
+            {% endfor %}
+            
+            {% for i in range(1, 13) %}
+                <div class="chart-month">
+                    {% if monthly_dict.get(i, 0) > 0 and overall_max_count > 0 %}
+                        <div class="chart-bar-song" style="height: {{ (monthly_dict.get(i, 0) / overall_max_count * 100) }}%;">
+                            <span class="bar-count">{{ monthly_dict.get(i, 0) }}</span>
+                        </div>
+                    {% else %}
+                        <div class="chart-bar-empty"></div>
+                    {% endif %}
+                    <div class="chart-label">{{ month_names[i] }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if overall_top_month %}
+        <div class="chart-info">
+            PEAK: {{ month_names[overall_top_month] }} with {{ overall_top_month_count }} plays
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <div class="section-title">► LYRICS</div>
+        <div class="lyrics-box">
+            <div class="lyrics-box-header">┌───────────────────────────────────────────────────────────┐</div>
+            <div class="lyrics-content-terminal">
+                {% if song.lyrics %}
+                    {{ song.lyrics | safe }}
+                {% else %}
+                    <p class="no-lyrics">NO LYRICS AVAILABLE</p>
+                {% endif %}
+            </div>
+            <div class="lyrics-box-footer">└───────────────────────────────────────────────────────────┘</div>
         </div>
     </div>
-    {% else %}
-    <div class="lyrics-section">
-        <p class="no-lyrics"><i class="fas fa-info-circle"></i> No lyrics available for this song.</p>
-    </div>
-    {% endif %}
 </div>
+
+<style>
+.terminal-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.back-link {
+    margin-bottom: 20px;
+}
+
+.back-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+.terminal-box {
+    background: #000;
+    padding: 30px;
+    border: 2px solid var(--primary-color);
+}
+
+.terminal-box-header span,
+.terminal-box-title {
+    color: var(--primary-color);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    display: block;
+    text-align: center;
+}
+
+.terminal-box-title {
+    padding: 5px 0;
+}
+
+.stats-header {
+    margin-top: 30px;
+}
+
+.song-info {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.song-name {
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.song-by {
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.song-by a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.song-by a:hover {
+    text-decoration: underline;
+}
+
+.song-album-info {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.song-metadata-terminal {
+    color: #888;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.stats-terminal {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stats-terminal-centered {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-value {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.terminal-button {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+.terminal-button:hover {
+    background: var(--primary-color);
+    color: #000;
+}
+
+.terminal-button.active {
+    background: var(--primary-color);
+    color: #000;
+}
+
+.timeline-info {
+    margin: 15px 0;
+}
+
+.info-line {
+    color: var(--primary-color);
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    background: rgba(168, 204, 140, 0.1);
+    margin: 5px 0;
+}
+
+.section-title {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    margin: 30px 0 15px 0;
+    font-weight: bold;
+}
+
+.section-title-chart {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    margin: 25px 0 10px 0;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.moods-terminal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mood-badge {
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 5px 15px;
+    background: rgba(168, 204, 140, 0.1);
+    font-size: 0.95rem;
+}
+
+.lyrics-box {
+    margin-top: 15px;
+}
+
+.lyrics-box-header,
+.lyrics-box-footer {
+    color: var(--primary-color);
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+.lyrics-content-terminal {
+    border-left: 1px solid var(--primary-color);
+    border-right: 1px solid var(--primary-color);
+    padding: 20px;
+    background: rgba(168, 204, 140, 0.05);
+    max-height: 400px;
+    overflow-y: auto;
+    color: #ccc;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.no-lyrics {
+    color: #666;
+    text-align: center;
+    font-style: italic;
+}
+
+.monthly-chart-song {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 200px;
+    gap: 8px;
+    margin: 20px 0;
+    padding: 0 10px;
+    position: relative;
+}
+
+.chart-month {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.chart-bar-song {
+    width: 100%;
+    background: linear-gradient(to top, var(--primary-color), rgba(168, 204, 140, 0.6));
+    border: 1px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: height 0.3s ease;
+}
+
+.chart-bar-empty {
+    width: 100%;
+    height: 0;
+}
+
+.bar-count {
+    color: #000;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.chart-label {
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    margin-top: 8px;
+}
+
+.chart-info {
+    color: var(--primary-color);
+    text-align: center;
+    padding: 10px;
+    background: rgba(168, 204, 140, 0.1);
+    margin: 10px 0;
+    font-size: 0.95rem;
+}
+</style>
 {% endblock %}

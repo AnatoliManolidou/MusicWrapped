@@ -1,308 +1,369 @@
-# Music Wrapped - Database Interface Application
+# Music Wrapped - Interactive Music Analytics Platform
 
-A Flask web application for the Music Wrapped Database project. This application provides an interface for end users to view their music listening statistics ("Wrapped") and for content managers to manage artists, albums, and songs.
+This project is the third deliverable for the course Data Bases (ECE AUTH, 2025–2026). Our team:
 
-## Project Structure
+Ομάδα 25<br> 
+Μανωλίδου Ανατολή 10874 amanolid@ece.auth.gr<br> 
+Σκλαβενίτης Γεώργιος 10708 gsklaven@ece.auth.gr<br> 
+Τζίνα Θεοδώρα 10715 tzinatheod@ece.auth.gr<br> 
+
+A Flask web application with a unique DOS/terminal aesthetic that transforms a comprehensive music listening database into an interactive "Wrapped" experience. Built on a MySQL database with 14 tables tracking users, artists, albums, songs, and listening history.
+
+##  Project Overview
+
+Music Wrapped provides two distinct experiences:
+- **End Users:** Interactive terminal-based "Wrapped 2025" statistics with 8 analytical queries
+- **Content Managers:** Full CRUD interface for managing artists, albums, and songs
+
+**Key Features:**
+- Interactive command-line interface with boot sequence
+- Comprehensive music analytics (top songs, artists, albums, moods, genres)
+- Monthly listening charts with trend indicators (↑↓)
+- Diversity index and consistency metrics
+- Role-based access control (2 user roles out of 5 were implemented)
+
+**Database Foundation:**
+- 14 interconnected tables
+- 14 artists from 8 countries
+- 14 albums across 5 genres
+- 21 songs with full metadata
+- 10 users with role-based permissions
+- 120+ listening sessions for 2025 analytics
+
+## 📁 Project Structure
 
 ```
 MusicWrapped/
-├── app.py                      # Main application file
-├── config.py                   # Configuration settings
-├── models.py                   # Database models (SQLAlchemy)
+├── app.py                      # Main Flask application
+├── config.py                   # Database configuration
+├── models.py                   # SQLAlchemy ORM models (14 tables)
 ├── requirements.txt            # Python dependencies
-├── routes/                     # Route handlers (controllers)
-│   ├── auth.py                # Authentication routes
-│   ├── dashboard.py           # User dashboard routes
-│   ├── songs.py               # Song detail routes
-│   ├── artists.py             # Artist detail routes
-│   └── content_manager.py     # Content management routes
-├── templates/                  # HTML templates (Jinja2)
-│   ├── base.html              # Base template
-│   ├── auth/                  # Authentication templates
-│   ├── dashboard/             # User dashboard templates
-│   ├── songs/                 # Song detail templates
-│   ├── artists/               # Artist detail templates
-│   └── content_manager/       # Content manager templates
-└── static/                     # Static files
+├── setup.ps1                   # PowerShell setup script
+├── .env.example                # Environment configuration template
+├── .gitignore                  # Git ignore rules
+├── README.md                   # This file (project overview)
+├── PROJECT_STRUCTURE.md        # Detailed architecture documentation
+├── DATA_ADDITIONS.md           # Added artists/albums/songs details
+├── QUICKSTART.md               # Quick setup guide
+├── user_credentials.md         # Test user login credentials
+├── database/                   # SQL database files
+│   ├── dbdump.sql             # Complete database dump
+│   ├── users.sql              # MySQL user creation
+│   ├── add_user_roles.sql     # User role assignments
+│   ├── database_additions.sql # Additional data
+│   └── query1-6.sql           # Analytical queries
+├── routes/                     # Flask blueprints (controllers)
+│   ├── auth.py                # Authentication (login/logout)
+│   ├── dashboard.py           # Wrapped stats, history, analytics
+│   ├── songs.py               # Song detail pages
+│   ├── artists.py             # Artist detail pages
+│   └── content_manager.py     # CRUD operations
+├── templates/                  # Jinja2 HTML templates
+│   ├── base.html              # Base template with DOS navigation
+│   ├── auth/
+│   │   └── login.html         # Login page
+│   ├── dashboard/             # Wrapped, history, stats pages
+│   │   ├── home.html          # Interactive terminal
+│   │   ├── history.html       # Listening history
+│   │   └── stats.html         # Statistics page
+│   ├── songs/
+│   │   └── detail.html        # Song detail page
+│   ├── artists/
+│   │   └── detail.html        # Artist detail page
+│   └── content_manager/       # Management interfaces
+│       ├── index.html         # Manager dashboard
+│       ├── artists.html       # Artist list
+│       └── artist_form.html   # Artist create/edit form
+└── static/                     # Static assets
     ├── css/
-    │   └── style.css          # Main stylesheet
+    │   ├── style.css          # Main stylesheet 
+    │   └── interactive-terminal.css  # Terminal styles 
     └── js/
-        └── main.js            # JavaScript functions
+        └── main.js            # JavaScript utilities
 ```
 
-## Features
+##  Features
 
 ### End User Features
-- **Wrapped Dashboard**: View your music year in review
-  - Total listening time
-  - Top 5 songs and artists
-  - Favorite genre
-  - Unique songs count
+
+#### **Wrapped 2025 Dashboard** (Interactive Terminal)
+- **Interactive Terminal:** Command-line interface with 8 queries
+  1. `run total_plays` - Total playback with progress bars
+  2. `run top_artists` - Top 5 artists with diversity index
+  3. `run top_songs` - Top 5 tracks with diversity index
+  4. `run top_albums` - Top 5 albums with diversity index
+  5. `run jam_sessions` - Music soulmate detection (solo/partner mode)
+  6. `run mood_analysis` - Emotional profile (10 moods)
+  7. `run top_genre` - Sound identity (5 genres)
+  8. `run monthly_chart` - Year overview with trend indicators (↑↓), consistency %, longest streak
+  - `help` - Show all commands
+  - `clear` - Clear terminal history
+
+#### **Statistics & Analytics**
+- **Percentile Ranking:** Compares user activity to all users ("top X% of listeners")
+  - Calculates percentile based on total plays and minutes
+  - Dynamic messages: top 10% ("most active"), top 25% ("impressive"), etc.
+- **Diversity Index:** Measures evenness of play distribution (0-100%, 0% when only 1 item)
+- **Dynamic Messages:** Total playback message adapts to actual listening (500+ min vs 10 min)
+- **Consistency Metrics:** Active months percentage with dynamic messages
+- **Longest Streak:** Consecutive months with ≥5 plays
+- **Trend Indicators:** Month-over-month changes (↑ increase, ↓ decrease)
+- **Mood Descriptions:** Personalized messages for 10 moods
+- **Genre Descriptions:** Custom text for 5 genres
+
+#### **Listening History**
+- Paginated view of all listening sessions (20 per page)
+- Song-artist-album information
+- Device type display
+- Date and time stamps
   
-- **Listening History**: Browse your complete listening history with pagination
+#### **Song Details**
+- Full lyrics display
+- Mood tags
+- Play count (personal vs global)
+- Personal rank for this song
+- Monthly listening charts (user + overall)
 
-- **Song Details**: Click on any song to see:
-  - Lyrics
-  - Your play count
-  - Total plays across all users
-  - Your rank for this song
-  - Moods/vibes
-  - First and last listen dates
-  - Like/unlike functionality
-
-- **Artist Details**: View artist information:
-  - Top songs by the artist
-  - Albums
-  - Your listen count for this artist
-  - Total listeners
-  - Follow/unfollow functionality
+#### **Artist Details**
+- Artist metadata (type, country, formation date)
+- Top songs by artist
+- Album discography
+- Personal listen count
+- Monthly listening charts (user + overall)
 
 ### Content Manager Features
-- **Dashboard**: Overview of total artists, albums, and songs
-- **Artist Management**: Create, edit, and delete artists
-- **Album Management**: Create, edit, and delete albums (with mood tags)
-- **Song Management**: Create, edit, and delete songs (with lyrics, moods, etc.)
+- **Dashboard:** Entity counts (artists, albums, songs)
+- **Artist Management:** Create, edit, delete artists with validation
 
-## Installation & Setup
+
+---
+
+##  Installation & Setup
 
 ### Prerequisites
 - Python 3.8 or higher
 - MySQL Server 8.0+
 - Git (optional)
 
-### Step 1: Clone/Navigate to the Project
+### Step 1: Configure Database Connection 
+
+Copy `.env.example` to `.env` and update with your MySQL password:
 
 ```powershell
-cd d:\MusicWrapped
-```
-
-### Step 2: Create a Virtual Environment
-
-```powershell
-python -m venv venv
-```
-
-### Step 3: Activate the Virtual Environment
-
-```powershell
-.\venv\Scripts\Activate
-```
-
-### Step 4: Install Dependencies
-
-```powershell
-pip install -r requirements.txt
-```
-
-### Step 5: Set Up the Database
-
-1. Make sure MySQL is running
-
-2. Import the database dump:
-
-```powershell
-# Import the database (SQL files are in the database folder)
-mysql -u root -p < database\dbdump.sql
-
-# Create users and assign privileges
-mysql -u root -p < database\users.sql
-```
-
-### Step 6: Configure Database Connection (IMPORTANT!)
-
-**Create a `.env` file** in the MusicWrapped directory with your database credentials:
-
-```powershell
-# Create the .env file
-New-Item -Path .env -ItemType File
-
-# Open it in notepad
+Copy-Item .env.example .env
 notepad .env
 ```
 
-**Add this content to the `.env` file:**
+In the `.env` file, replace `your_mysql_password_here` with your actual MySQL root password:
 
 ```env
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_HOST=localhost
-DB_NAME=musicwrappeddatabase
+DB_PASSWORD=your_actual_password
 ```
 
-Replace `your_mysql_password` with your actual MySQL root password.
-
-**Important Notes:**
-- ✅ The `.env` file is in `.gitignore` - your password won't be uploaded to GitHub
-- ✅ See [`.env.example`](.env.example) for a template
-- ✅ See [SETUP_PASSWORD.md](SETUP_PASSWORD.md) for detailed instructions
-- ⚠️ The app will NOT run without a `.env` file!
-
-### Step 7: Run the Application
+### Step 2: Run Setup Script (Recommended)
 
 ```powershell
-# Make sure you're in the MusicWrapped directory
 cd d:\MusicWrapped
+.\setup.ps1
+```
 
-# Run the Flask app
+This will:
+- Check Python and MySQL
+- Create virtual environment
+- Install dependencies
+
+### Step 3: Manual Setup (Alternative)
+
+If the setup script doesn't work, use manual setup:
+
+```powershell
+# Create and activate virtual environment
+python -m venv venv
+.\venv\Scripts\Activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Step 4: Import the Database
+
+If you haven't already imported the database, open Command Prompt (cmd) and run:
+
+```cmd
+cd /d D:\MusicWrapped
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\dbdump.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\users.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\add_user_roles.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\database_additions.sql
+```
+
+**Note:** Adjust the MySQL path if you have a different version (e.g., `MySQL Server 8.4`).
+
+### Step 5: Run the Application
+
+Make sure to activate the virtual environment, if it has not been activated yet:
+
+```powershell
+cd d:\MusicWrapped
+.\venv\Scripts\Activate
 python app.py
 ```
 
 The application will start on `http://localhost:5000`
 
-## Usage
+##  Usage
 
 ### For End Users
 
 1. Navigate to `http://localhost:5000`
-2. Login with existing credentials:
-   - Username: `nikos_89` (or any user from the database)
-   - Password: Check your database (default passwords may vary)
-   - User Type: Select "End User"
-3. Explore your Wrapped dashboard, listening history, and song/artist details
+2. Login with test credentials:
+   - **Username:** `vinylcollector`
+   - **Password:** `password123`
+3. Experience the boot sequence → hero section → interactive terminal
+4. Try commands:
+   - Type `help` to see all available commands
+   - Type `run total_plays` to see your playback stats
+   - Type `run monthly_chart` to visualize your year
+5. Explore song/artist details by clicking from any list
 
 ### For Content Managers
 
 1. Navigate to `http://localhost:5000`
-2. Login with admin credentials:
-   - Username: Create a user or use existing
-   - Password: Your password
-   - User Type: Select "Content Manager"
-3. Access the content management dashboard to add/edit/delete:
-   - Artists
-   - Albums
-   - Songs
+2. Login with manager credentials:
+   - **Username:** `maria_bel` 
+   - **Password:** `Maria_It3 `
+3. Access management dashboard
+4. Add/Edit/Delete artists
 
-## User Roles
+---
 
-The application supports the following user roles defined in your database:
+##  User Roles
 
-- **End_User**: Can view their listening statistics and explore music
-- **Content_Manager**: Can create, edit, and delete artists, albums, and songs
-- **Data_Analyst**: Can view all data (read-only access)
-- **Artist**: Can view artist-specific statistics
-- **Administrator**: Full database access
+The application supports five user roles defined in the database:
 
-## Database Schema
+- **End_User:** View Wrapped statistics, history, explore songs/artists
+- **Content_Manager:** Full CRUD operations on artists (albums and songs for future enhancement)
+- **Data_Analyst:** Read-only access to all data (future enhancement)
+- **Artist:** Artist-specific statistics (future enhancement)
+- **Administrator:** Full system access (future enhancement)
 
-The application uses the following main entities:
+---
 
-- **User**: App users with listening history
-- **Artist**: Music artists (solo or band)
-- **Album**: Albums by artists
-- **Song**: Individual songs
-- **Playlist**: User-created playlists
-- **UserListensSong**: Listening history
-- **UserLikesSong**: Liked songs
-- **UserFollowsArtist**: Followed artists
+##  Database Schema
+
+The application uses 14 interconnected tables:
+
+**Core Entities:**
+- **user** - User accounts with roles and demographics
+- **artist** - Musicians/bands with metadata
+- **album** - Albums with genres and types
+- **song** - Individual tracks with lyrics, duration, genre
+
+**Relationships:**
+- **song_moods** / **album_moods** / **playlist_moods** - Many-to-many mood assignments
+- **playlist** - User-created playlists
+- **playlist_contains_song** - Songs in playlists
+
+**Activity Tracking:**
+- **user_listens_song** - Complete listening history with timestamps
+- **user_likes_song** - Liked songs
+- **user_follows_artist** - Artist follows
+- **user_follows_user** - User connections
+- **user_jams_user** - Jam sessions (simultaneous listening)
+
+**See [database/README.md](database/README.md) for complete schema documentation.**
+
+---
 
 ## Technologies Used
 
-- **Backend**: Flask (Python web framework)
-- **Database**: MySQL 8.0
-- **ORM**: SQLAlchemy (Flask-SQLAlchemy)
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Styling**: Custom CSS with Spotify-inspired dark theme
-- **Icons**: Font Awesome 6
+**Backend:**
+- Flask 3.0.0 (Python web framework)
+- SQLAlchemy 3.1.1 (ORM)
+- PyMySQL 1.1.0 (MySQL connector)
+- python-dotenv (Environment variables)
 
-## Screenshots & Features Walkthrough
+**Database:**
+- MySQL 8.0
 
-### End User Flow:
-1. Login → Dashboard (Wrapped) → View stats
-2. Click on a song → See song details, lyrics, your stats
-3. Like/unlike songs
-4. Click on artist → See artist details, top songs
-5. Follow/unfollow artists
-6. Browse listening history
+**Frontend:**
+- HTML5 with Jinja2 templating
+- Custom CSS (~3200 lines)
+- Vanilla JavaScript (no frameworks)
 
-### Content Manager Flow:
-1. Login as Content Manager
-2. Dashboard → Overview stats
-3. Manage Artists → Add/Edit/Delete
-4. Manage Albums → Add/Edit/Delete (with moods)
-5. Manage Songs → Add/Edit/Delete (with lyrics and moods)
+**Design:**
+- VT323 font (retro terminal)
+- Courier Prime font (monospace)
+- DOS box-drawing characters (╔═══╗)
+- Sage green (#A8CC8C) on black theme
 
-## Troubleshooting
+---
+
+##  Troubleshooting
 
 ### "Database password not found!" Error
 
-**Problem:** The `.env` file doesn't exist or `DB_PASSWORD` is missing
-
 **Solution:**
-1. Create a `.env` file in the MusicWrapped directory
-2. Add your database password (see Step 6 above)
-3. See [SETUP_PASSWORD.md](SETUP_PASSWORD.md) for detailed help
+1. Create `.env` file in project root
+2. Add: `DB_PASSWORD=your_mysql_password`
+3. Restart the application
 
 ### Database Connection Issues
 
-If you see "Can't connect to MySQL server" or "Access denied":
-
-1. Verify MySQL is running:
-   ```powershell
-   Get-Service MySQL*
-   ```
-
-2. Check your `.env` file contains the correct password
-
-3. Test connection manually:
-   ```powershell
-   mysql -u root -p
-   # Enter the same password from your .env file
-   USE musicwrappeddatabase;
-   SHOW TABLES;
-   ```
-
-### Import Errors
-
-If you get module import errors:
-
+**Check MySQL status:**
 ```powershell
-# Make sure virtual environment is activated
-.\venv\Scripts\Activate
+Get-Service MySQL*
+```
 
-# Reinstall dependencies (including python-dotenv)
+**Test connection:**
+```powershell
+mysql -u root -p
+USE musicwrappeddatabase;
+SHOW TABLES;
+```
+
+### Module Import Errors
+
+**Reinstall dependencies:**
+```powershell
+.\venv\Scripts\Activate
 pip install -r requirements.txt
 ```
 
-### Missing Templates
+---
 
-If you see "TemplateNotFound" errors, ensure all template files are created in the correct directory structure.
+##  Documentation
 
-## Additional Templates Needed
+- **[README.md](README.md)** - This file (overview and setup)
+- **[PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)** - Complete project architecture and design decisions
+- **[DATA_ADDITIONS.md](DATA_ADDITIONS.md)** - Details on artists, albums, and songs added during development
+- **[QUICKSTART.md](QUICKSTART.md)** - Quick setup guide
+- **[database/README.md](database/README.md)** - Database schema documentation
+- **[user_credentials.md](user_credentials.md)** - Test user credentials
 
-For a complete application, you'll also need to create these template files:
+---
 
-- ✅ `templates/auth/login.html` - Login page (CREATED)
-- ✅ `templates/dashboard/home.html` - Wrapped dashboard (CREATED)
-- ✅ `templates/dashboard/history.html` - Listening history page (CREATED)
-- ✅ `templates/songs/detail.html` - Song detail page (CREATED)
-- ✅ `templates/artists/detail.html` - Artist detail page (CREATED)
-- ✅ `templates/content_manager/index.html` - CM dashboard (CREATED)
-- ✅ `templates/content_manager/artists.html` - List of artists (CREATED)
-- ✅ `templates/content_manager/artist_form.html` - Add/Edit artist form (CREATED)
-- ⬜ `templates/auth/register.html` - User registration page
-- ⬜ `templates/dashboard/stats.html` - Detailed statistics page
-- ⬜ `templates/artists/browse.html` - Browse all artists
-- ⬜ `templates/songs/search.html` - Song search page
-- ⬜ `templates/content_manager/albums.html` - List of albums
-- ⬜ `templates/content_manager/songs.html` - List of songs
-- ⬜ `templates/content_manager/album_form.html` - Add/Edit album form
-- ⬜ `templates/content_manager/song_form.html` - Add/Edit song form
+### Data Additions
+See [DATA_ADDITIONS.md](DATA_ADDITIONS.md) for complete details on:
+- **6 artists added:** Depeche Mode, Sade, Interpol, Radiohead, Massive Attack, Tame Impala
+- **6 albums added:** Violator, Diamond Life, Turn On the Bright Lights, OK Computer, Mezzanine, Deadbeat
+- **11 songs added** from new artists
+- Expanded listening history for comprehensive wrapped analytics  
 
-**Note:** The core features are fully functional with the templates already created!
+---
 
-## Future Enhancements
+##  License
 
-Possible improvements for extra credit:
+This project is created for educational purposes as part of a database systems course.
 
-- User registration and authentication with password hashing
-- Data visualization with charts (using Chart.js or Plotly)
-- Playlist management features
-- Social features (following users, viewing friends' wrapped)
-- Music recommendations based on listening history
-- Export wrapped as PDF/image
-- Admin panel for user management
-- API endpoints for mobile app
+---
 
-## License
+##  Project Architecture
 
-This project is created for educational purposes as part of a university course assignment.
+**Database Foundation:**  
+MySQL database with 14 interconnected tables tracking users, artists, albums, songs, playlists, and listening history. Enhanced during development with additional artists and albums to support comprehensive analytics.
+
+**Web Application:**  
+Flask framework with blueprint architecture, SQLAlchemy ORM, and Jinja2 templating. Features a unique DOS/terminal aesthetic with interactive command-line interface.
+
+---

@@ -1,16 +1,19 @@
 # Music Wrapped - Quick Start Guide
 
-## 🚀 Quick Setup (5 minutes)
-
 ### 1. Update Database Password
 
-Open `config.py` and change line 13:
+Copy `.env.example` to `.env` and update with your MySQL password:
 
-```python
-DB_PASSWORD = os.environ.get('DB_PASSWORD') or 'YOUR_MYSQL_PASSWORD_HERE'
+```powershell
+Copy-Item .env.example .env
+notepad .env
 ```
 
-Replace `YOUR_MYSQL_PASSWORD_HERE` with your actual MySQL root password.
+In the `.env` file, replace `your_mysql_password_here` with your actual MySQL password:
+
+```
+DB_PASSWORD=your_actual_password
+```
 
 ### 2. Run Setup Script (Optional)
 
@@ -36,18 +39,23 @@ pip install -r requirements.txt
 
 ### 4. Make Sure Database is Imported
 
-If you haven't already imported the database:
+If you haven't already imported the database, open Command Prompt (cmd) and run:
 
-```powershell
-# From the MusicWrapped directory
-mysql -u root -p < database\dbdump.sql
-mysql -u root -p < database\users.sql
+```cmd
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\dbdump.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\users.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\add_user_roles.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p musicwrappeddatabase < database\database_additions.sql
 ```
+
+**Note:** Adjust the MySQL path if you have a different version (e.g., `MySQL Server 8.4`).
 
 ### 5. Run the Application
 
+Make sure to activate the virtual environment, if it has not been avtivated yet:
+
 ```powershell
-cd d:\MusicWrapped
+.\venv\Scripts\Activate
 python app.py
 ```
 
@@ -58,8 +66,8 @@ Navigate to: **http://localhost:5000**
 ### 7. Login
 
 **End User (to see Wrapped dashboard):**
-- Username: `pierre_frt`
-- Password: `Pierre@33`
+- Username: `vinylcollector`
+- Password: `password123`
 
 **Content Manager (to manage content):**
 - Username: `maria_bel`
@@ -67,35 +75,26 @@ Navigate to: **http://localhost:5000**
 
 *See `user_credentials.md` for all available users*
 
-## 📁 Project Structure
-
-```
-MusicWrapped/
-├── app.py                  # Main app - RUN THIS
-├── config.py              # Database config - EDIT THIS FIRST
-├── models.py              # Database models
-├── requirements.txt       # Dependencies
-├── routes/                # Application routes
-├── templates/             # HTML templates
-└── static/               # CSS, JS, images
-```
-
-## ✨ Features
+##  Features
 
 ### For End Users:
 - **Wrapped Dashboard** - Your music year in review
 - **Song Details** - Lyrics, stats, moods
 - **Artist Pages** - Top songs, albums
 - **History** - All your listens
-- **Like/Follow** - Save favorites
 
 ### For Content Managers:
-- **Add Artists** - Create new artists
-- **Add Albums** - Create albums with moods
-- **Add Songs** - Upload songs with lyrics
-- **Edit/Delete** - Manage all content
+- Add Artists - Create new artists
+- Edit/Delete - Manage all content
 
-## 🐛 Troubleshooting
+```
+- **Feature Enhancement** -
+
+- Add Albums - Create albums with moods
+- Add Songs - Upload songs with lyrics
+```
+
+##  Troubleshooting
 
 **Can't connect to database?**
 1. Check MySQL is running: `Get-Service MySQL*`
@@ -107,7 +106,3 @@ MusicWrapped/
 .\venv\Scripts\Activate
 pip install -r requirements.txt
 ```
-
-## 📧 Need Help?
-
-Check the full README.md for detailed documentation.

@@ -5,13 +5,13 @@
 {% block content %}
 <div class="stats-page scroll-reveal-page">
     <div class="stats-hero">
-        <h1 class="stats-hero-title">🎵 Your {{ year }} Music Journey 🎵</h1>
+        <h1 class="stats-hero-title">♪♫ Your {{ year }} Music Journey ♪♫</h1>
         <p class="stats-hero-subtitle">Let's explore what made your year so special!</p>
     </div>
 
     <!-- Monthly Listening Trends -->
     <div class="stats-section monthly-section reveal-section" data-reveal>
-        <h2 class="section-title fun-title">📅 Your Year in Music</h2>
+        <h2 class="section-title fun-title">[▓] Your Year in Music</h2>
         <p class="section-subtitle">Watch your listening journey unfold month by month!</p>
         <div class="monthly-chart">
             {% set month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] %}
@@ -39,12 +39,12 @@
 
     <!-- Quick Insights -->
     <div class="stats-section insights-section reveal-section" data-reveal>
-        <h2 class="section-title fun-title">✨ Fun Facts About You</h2>
+        <h2 class="section-title fun-title">*** Fun Facts About You</h2>
         <p class="section-subtitle">Here's what makes your music taste unique!</p>
         <div class="insights-grid">
             {% if monthly_stats %}
             <div class="insight-card playful-card">
-                <div class="card-icon fire-icon">🔥</div>
+                <div class="card-icon fire-icon">/\</div>
                 <h3>Peak Performance</h3>
                 {% set busiest = monthly_stats|sort(attribute=1, reverse=true)|first %}
                 <p class="big-number">{{ month_names[busiest[0] - 1] }}</p>
@@ -53,7 +53,7 @@
             {% endif %}
             
             <div class="insight-card playful-card">
-                <div class="card-icon">🎉</div>
+                <div class="card-icon">***</div>
                 <h3>Social Butterfly</h3>
                 <p class="big-number">{{ jam_count }}</p>
                 <p class="card-description">jam sessions with {{ jam_partners }} friends</p>
@@ -61,7 +61,7 @@
             
             {% if total_jam_time > 0 %}
             <div class="insight-card playful-card">
-                <div class="card-icon">⏰</div>
+                <div class="card-icon">[O]</div>
                 <h3>Party Hours</h3>
                 <p class="big-number">{{ (total_jam_time / 60)|round(1) }}h</p>
                 <p class="card-description">jamming with friends</p>
@@ -72,29 +72,29 @@
 
     <!-- User Extra Stats -->
     <div class="stats-section extra-stats-section reveal-section" data-reveal>
-        <h2 class="section-title fun-title">🎨 Your Musical Personality</h2>
+        <h2 class="section-title fun-title">[#] Your Musical Personality</h2>
         <p class="section-subtitle">Discover what your listening habits say about you!</p>
         <div class="insights-grid personality-grid">
             <div class="insight-card personality-card">
-                <div class="card-icon">🎧</div>
+                <div class="card-icon"><span style="font-size: 2rem;">▶︎ •၊၊||၊|။|||| |</span></div>
                 <h3>Playlist Creator</h3>
                 <p class="big-number">{{ playlist_count }}</p>
                 <p class="card-description">playlists crafted with love</p>
             </div>
             <div class="insight-card personality-card mood-card">
-                <div class="card-icon">{{ '😊' if playlist_mood == 'Happy' else '😌' if playlist_mood == 'Calm' else '⚡' if playlist_mood == 'Energetic' else '🤘' if playlist_mood == 'Aggressive' else '🎵' }}</div>
+                <div class="card-icon">{{ ':)' if playlist_mood == 'Happy' else '~' if playlist_mood == 'Calm' else '!' if playlist_mood == 'Energetic' else 'X' if playlist_mood == 'Aggressive' else '♪' }}</div>
                 <h3>Your Vibe Is</h3>
                 <p class="big-number mood-text">{{ playlist_mood if playlist_mood else 'Mixed' }}</p>
                 <p class="card-description">most common playlist mood</p>
             </div>
             <div class="insight-card personality-card album-card">
-                <div class="card-icon">💿</div>
+                <div class="card-icon">𓇳</div>
                 <h3>Album Champion</h3>
                 <p class="album-title">{{ favorite_album if favorite_album else 'Keep Exploring!' }}</p>
                 <p class="card-description">your most played album</p>
             </div>
             <div class="insight-card personality-card genre-card">
-                <div class="card-icon">🎸</div>
+                <div class="card-icon">𝄞</div>
                 <h3>Genre Explorer</h3>
                 {% if genre_dist %}
                 <div class="genre-bars">

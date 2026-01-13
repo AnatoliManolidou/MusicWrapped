@@ -1,45 +1,202 @@
 {% extends "base.html" %}
 
-{% block title %}Login - Music Wrapped{% endblock %}
+{% block title %}SYSTEM LOGIN - Music Wrapped{% endblock %}
 
 {% block content %}
 <div class="auth-container">
-    <div class="auth-box">
-        <div class="auth-header">
-            <i class="fas fa-music fa-3x"></i>
-            <h1>Music Wrapped</h1>
-            <p>Login to your account</p>
+    <div class="login-terminal">
+        <div class="terminal-header-login">
+            <div>═══════════════════════════════════════════════</div>
+            <div>           MUSIC_WRAPPED.SYS v1.0</div>
+            <div>                 SYSTEM LOGIN</div>
+            <div>═══════════════════════════════════════════════</div>
         </div>
 
-        <form method="POST" action="{{ url_for('auth.login') }}" class="auth-form">
-            <div class="form-group">
-                <label for="username">
-                    <i class="fas fa-user"></i> Username
-                </label>
-                <input type="text" id="username" name="username" required>
+        <div class="login-prompt">
+            <p>&gt; AUTHENTICATION REQUIRED</p>
+            <p>&gt; ENTER CREDENTIALS TO ACCESS THE SYSTEM</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
+            <div class="form-field">
+                <label>USERNAME:</label>
+                <div class="input-line">
+                    <span>&gt;</span>
+                    <input type="text" id="username" name="username" required placeholder="enter_username" autocomplete="off">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="password">
-                    <i class="fas fa-lock"></i> Password
-                </label>
-                <input type="password" id="password" name="password" required>
+            <div class="form-field">
+                <label>PASSWORD:</label>
+                <div class="input-line">
+                    <span>&gt;</span>
+                    <input type="password" id="password" name="password" required placeholder="enter_password" autocomplete="off">
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">
-                <i class="fas fa-sign-in-alt"></i> Login
+            <button type="submit" class="access-btn">
+                [✓] ACCESS SYSTEM
             </button>
         </form>
 
-        <div class="auth-footer">
-            <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
-        </div>
-
-        <div class="demo-credentials">
-              <h3>Demo Credentials:</h3>
-              <p><strong>End User:</strong> pierre_frt / Pierre@33</p>
-              <p><strong>Content Manager:</strong> maria_bel / Maria_It3</p>
+        <div class="demo-section">
+            <div class="demo-divider">───────────────────────────────────────────────</div>
+            <p class="demo-title">DEMO ACCOUNTS AVAILABLE:</p>
+            <p>&gt;</p>
+            <p>END_USER       : vinylcollector / password123</p>
+            <p>CONTENT_MGR    : maria_bel       / Maria_It3</p>
+            <div class="demo-divider">───────────────────────────────────────────────</div>
         </div>
     </div>
 </div>
+
+<style>
+/* Hide navigation on login page */
+.navbar {
+    display: none !important;
+}
+
+.auth-container {
+    margin-top: 0 !important;
+    padding-top: 60px;
+}
+
+.login-terminal {
+    background-color: var(--secondary-color);
+    border: 2px solid var(--primary-color);
+    padding: 40px;
+    max-width: 700px;
+    margin: 0 auto;
+    animation: terminalBoot 0.5s ease-out;
+}
+
+.terminal-header-login {
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.8;
+}
+
+.terminal-header-login div {
+    margin: 2px 0;
+}
+
+.login-prompt {
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.login-prompt p {
+    margin: 6px 0;
+    line-height: 1.6;
+}
+
+.login-form {
+    margin-bottom: 30px;
+}
+
+.form-field {
+    margin-bottom: 20px;
+}
+
+.form-field label {
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.input-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-line span {
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+}
+
+.input-line input {
+    flex: 1;
+    font-family: 'VT323', monospace;
+    font-size: 1.3rem;
+    padding: 10px 14px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.input-line input:focus {
+    outline: none;
+    border-color: var(--accent-bright);
+    box-shadow: 0 0 8px rgba(168, 204, 140, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.input-line input::placeholder {
+    color: rgba(168, 204, 140, 0.4);
+}
+
+.access-btn {
+    width: 100%;
+    padding: 12px;
+    font-family: 'VT323', monospace;
+    font-size: 1.5rem;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 2px;
+    margin-top: 10px;
+}
+
+.access-btn:hover {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    box-shadow: 0 0 15px rgba(168, 204, 140, 0.5);
+    transform: translateX(5px);
+}
+
+.demo-section {
+    font-family: 'VT323', monospace;
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-top: 30px;
+}
+
+.demo-divider {
+    color: var(--primary-color);
+    margin: 10px 0;
+}
+
+.demo-title {
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.demo-section p {
+    margin: 6px 0;
+    line-height: 1.6;
+}
+
+@keyframes terminalBoot {
+    0% {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style>
 {% endblock %}
+

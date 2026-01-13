@@ -5,7 +5,7 @@ Handles song details and related information
 
 from flask import Blueprint, render_template, session, redirect, url_for, flash, request
 from models import db, Song, Artist, SongMoods, UserListensSong, UserLikesSong, Album
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, extract
 from datetime import datetime
 
 bp = Blueprint('songs', __name__, url_prefix='/songs')
@@ -47,6 +47,7 @@ def detail(song_id):
         SongMoods.song_id == song_id
     ).all()
     moods = [m[0] for m in moods]
+    mood_str = ', '.join(moods) if moods else 'Unknown'
     
     # Get user's play count for this song
     user_play_count = UserListensSong.query.filter_by(
@@ -58,12 +59,6 @@ def detail(song_id):
     total_play_count = UserListensSong.query.filter_by(
         song_id=song_id
     ).count()
-    
-    # Check if user liked this song
-    is_liked = UserLikesSong.query.filter_by(
-        user_id=user_id,
-        song_id=song_id
-    ).first() is not None
     
     # Get user's rank for this song (how it ranks in their most played)
     user_rank = db.session.query(
@@ -79,32 +74,69 @@ def detail(song_id):
         )
     ).scalar() or 0
     
-    # Get first and last listen dates
-    first_listen = db.session.query(
-        func.min(UserListensSong.timestamp_start)
+    # Get monthly listening data for 2025
+    monthly_stats = db.session.query(
+        extract('month', UserListensSong.timestamp_start).label('month'),
+        func.count(UserListensSong.song_id).label('play_count')
     ).filter(
         UserListensSong.user_id == user_id,
-        UserListensSong.song_id == song_id
-    ).scalar()
+        UserListensSong.song_id == song_id,
+        extract('year', UserListensSong.timestamp_start) == 2025
+    ).group_by(
+        extract('month', UserListensSong.timestamp_start)
+    ).all()
     
-    last_listen = db.session.query(
-        func.max(UserListensSong.timestamp_start)
+    # Calculate top month
+    top_month = None
+    top_month_count = 0
+    max_count = 0
+    if monthly_stats:
+        for month, count in monthly_stats:
+            if count > top_month_count:
+                top_month = int(month)
+                top_month_count = count
+            if count > max_count:
+                max_count = count
+    
+    # Get overall monthly stats for this song (all users)
+    overall_monthly_stats = db.session.query(
+        extract('month', UserListensSong.timestamp_start).label('month'),
+        func.count(UserListensSong.song_id).label('play_count')
     ).filter(
-        UserListensSong.user_id == user_id,
-        UserListensSong.song_id == song_id
-    ).scalar()
+        UserListensSong.song_id == song_id,
+        extract('year', UserListensSong.timestamp_start) == 2025
+    ).group_by(
+        extract('month', UserListensSong.timestamp_start)
+    ).all()
+    
+    # Calculate overall top month
+    overall_top_month = None
+    overall_top_month_count = 0
+    overall_max_count = 0
+    if overall_monthly_stats:
+        for month, count in overall_monthly_stats:
+            if count > overall_top_month_count:
+                overall_top_month = int(month)
+                overall_top_month_count = count
+            if count > overall_max_count:
+                overall_max_count = count
     
     return render_template('songs/detail.html',
                          song=song_obj,
                          artist=artist_obj,
                          album=album_obj,
-                         moods=moods,
+                         mood_str=mood_str,
                          user_play_count=user_play_count,
                          total_play_count=total_play_count,
-                         is_liked=is_liked,
                          user_rank=user_rank if user_rank > 0 else 'N/A',
-                         first_listen=first_listen,
-                         last_listen=last_listen)
+                         monthly_stats=monthly_stats,
+                         top_month=top_month,
+                         top_month_count=top_month_count,
+                         max_count=max_count,
+                         overall_monthly_stats=overall_monthly_stats,
+                         overall_top_month=overall_top_month,
+                         overall_top_month_count=overall_top_month_count,
+                         overall_max_count=overall_max_count)
 
 @bp.route('/<int:song_id>/like', methods=['POST'])
 @login_required

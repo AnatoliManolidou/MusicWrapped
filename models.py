@@ -14,7 +14,7 @@ class User(db.Model):
     username = db.Column(db.String(25), unique=True, nullable=False)
     password = db.Column(db.String(45), nullable=False)
     email = db.Column(db.String(45), nullable=False)
-    country = db.Column(db.Enum('Greece', 'Germany', 'Italy', 'France', 'UK', 'Spain'), nullable=False)
+    country = db.Column(db.Enum('Greece', 'Germany', 'Italy', 'France', 'UK', 'Spain', 'Australia'), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     role = db.Column(db.Enum('End_User', 'Content_Manager', 'Data_Analyst', 'Artist', 'Administrator'), nullable=False, default='End_User')
     
@@ -33,7 +33,7 @@ class Artist(db.Model):
     artist_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), unique=True, nullable=False)
     artist_type = db.Column(db.Enum('Solo', 'Band'), nullable=False)
-    country = db.Column(db.Enum('USA', 'UK', 'Germany', 'Ireland', 'France', 'Canada', 'Greece'), nullable=False)
+    country = db.Column(db.Enum('USA', 'UK', 'Germany', 'Ireland', 'France', 'Canada', 'Greece', 'Australia'), nullable=False)
     formation_date = db.Column(db.Date, nullable=False)
     active_status = db.Column(db.Boolean, nullable=False, default=True)
     
@@ -137,7 +137,7 @@ class UserListensSong(db.Model):
     song_id = db.Column(db.Integer, db.ForeignKey('song.song_id'), primary_key=True)
     timestamp_start = db.Column(db.DateTime, primary_key=True, nullable=False)
     timestamp_end = db.Column(db.DateTime, nullable=False)
-    device_type = db.Column(db.Enum('Mobile', 'Desktop', 'Tablet', 'Smart Speaker', 'Web', 'TV', 'Car', 'Wearable', 'Gaming Console', 'Other'), nullable=False)
+    device_type = db.Column(db.Enum('Mobile', 'Desktop', 'Tablet', 'Smart TV', 'Web Player'), nullable=False)
 
 
 class UserLikesSong(db.Model):
