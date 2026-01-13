@@ -14,7 +14,7 @@
 
 ## Project Overview
 
-**Music Wrapped** is a retro DOS/terminal-styled web application that transforms a music listening database into an interactive "Wrapped" experience, similar to Spotify Wrapped.
+**Music Wrapped** is a retro 90's DOS/terminal-styled web application that transforms a music listening database into an interactive "Wrapped" experience, similar to Spotify Wrapped.
 
 **Technology Stack:**
 - **Backend:** Flask 3.0.0 (Python web framework)
