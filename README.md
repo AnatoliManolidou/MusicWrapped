@@ -1,13 +1,21 @@
-# Music Wrapped - Interactive Music Analytics Platform
+<div align="center">
 
-This project is the third deliverable for the course Data Bases (ECE AUTH, 2025–2026). Our team:
+# Music Wrapped
 
-Ομάδα 25<br> 
-Μανωλίδου Ανατολή 10874 amanolid@ece.auth.gr<br> 
-Σκλαβενίτης Γεώργιος 10708 gsklaven@ece.auth.gr<br> 
-Τζίνα Θεοδώρα 10715 tzinatheod@ece.auth.gr<br> 
+**Interactive music analytics platform in Flask + MySQL**
+
+Data Bases - ECE AUTH, 2025-26
+
+---
+
+</div>
 
 A Flask web application with a unique DOS/terminal aesthetic that transforms a comprehensive music listening database into an interactive "Wrapped" experience. Built on a MySQL database with 14 tables tracking users, artists, albums, songs, and listening history.
+
+Team 25<br>
+Manolidou Anatoli 10874 amanolid@ece.auth.gr<br>
+Sklavenitis Georgios 10708 gsklaven@ece.auth.gr<br>
+Tzina Theodora 10715 tzinatheod@ece.auth.gr<br>
 
 ##  Project Overview
 
@@ -367,3 +375,7 @@ MySQL database with 14 interconnected tables tracking users, artists, albums, so
 Flask framework with blueprint architecture, SQLAlchemy ORM, and Jinja2 templating. Features a unique DOS/terminal aesthetic with interactive command-line interface.
 
 ---
+
+<div align="center">
+<sub>Aristotle University of Thessaloniki - School of Electrical & Computer Engineering</sub>
+</div>

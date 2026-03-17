@@ -39,3 +39,7 @@ Thumbs.db
 build/
 dist/
 *.egg-info/
+
+
+# Static files
+README.txt
